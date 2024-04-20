@@ -2,6 +2,8 @@
 namespace App\Infra;
 use App\Domain\Validations\IConstraints;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SymfonyValidationConstraints implements IConstraints
 {
@@ -25,10 +27,30 @@ class SymfonyValidationConstraints implements IConstraints
         return new Assert\Date();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param callable $callback Contém a callback que será executada cuja sua função é retornar a mensagem um array de mensagens de erro, ou null caso não haja erro.
+     * @param [type] $message
+     */
     public function callback(callable $callback)
     {
         return new Assert\Callback(
-            callback: $callback
+            function ($value, ExecutionContextInterface $context) use ($callback) {
+                $errors = $callback($value);
+                
+                if (is_null($errors)) {
+                    return;
+                }
+
+                if(is_string($errors)) {
+                    $errors = [$errors];
+                }
+
+                foreach($errors as $errorMessage) {
+                    $context->buildViolation($errorMessage)->addViolation();
+                }
+            }
         );
     }
 
