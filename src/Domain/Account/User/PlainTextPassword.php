@@ -2,11 +2,12 @@
 namespace App\Domain\Account\User;
 
 use DateTime;
-use App\Domain\Validations\IValidable;
+use App\Domain\Validations\Validable;
+use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationResult;
-use App\Domain\Account\User\PlainTextPasswordValidation;
+use App\Domain\Account\User\ValidationRules\PlainTextPasswordValidation;
 
-class PlainTextPassword implements IValidable
+class PlainTextPassword extends Validable
 {
     private ?string $ownerFirstName = null;
     private ?string $ownerLastName = null;
@@ -32,5 +33,10 @@ class PlainTextPassword implements IValidable
     public function validate(): ValidationResult
     {
         return $this->plainTextValidationRules->validatePassword($this->password, $this->ownerFirstName, $this->ownerLastName, $this->ownerBirthDate);
+    }
+
+    public function validationRules(): ValidationList
+    {
+        return $this->plainTextValidationRules->allRules();
     }
 }

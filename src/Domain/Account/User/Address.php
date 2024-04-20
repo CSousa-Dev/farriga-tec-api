@@ -1,11 +1,12 @@
 <?php 
 namespace App\Domain\Account\User;
 
-use App\Domain\Validations\IValidable;
+use App\Domain\Validations\Validable;
 use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\ValidationRules\AddressValidation;
+use App\Domain\Validations\ValidationList;
 
-class Address implements IValidable
+class Address extends Validable
 {
     public function __construct(
         private AddressValidation $addressValidationRules,
@@ -23,5 +24,10 @@ class Address implements IValidable
     public function validate(): ValidationResult
     {
         return $this->addressValidationRules->validateFromAdrress($this);
+    }
+
+    public function validationRules(): ValidationList
+    {
+        return $this->addressValidationRules->allRules();
     }
 }

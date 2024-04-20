@@ -5,23 +5,25 @@ use DateTime;
 use LogicException;
 use InvalidArgumentException;
 use App\Domain\Account\User\Email;
-use App\Domain\Validations\IValidable;
+use App\Domain\Validations\Validable;
+use App\Domain\Account\Documents\Document;
+use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\PlainTextPassword;
-use App\Domain\Account\User\Documents\IDocument;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 
-class User implements IValidable {
+class User extends Validable {
 
     private Address $address;
+
+    private ?PlainTextPassword $password = null;
 
     public function __construct(
         public readonly string $id, 
         private string $firstName,
         private string $lastName,
-        private IDocument $document,
+        private Document $document,
         private UserValidation $userValidation,
-        private PlainTextPassword $password, 
         private DateTime $birthDate,
         private Email $email 
     )
@@ -35,16 +37,24 @@ class User implements IValidable {
     public function changeHomeAddress(Address $address): void
     {
         $this->address = $address;
+        $this->validate();
     }
 
-    public function changeDocument(IDocument $document): void
+    public function changeDocument(Document $document): void
     {
         $this->document = $document;
+        $this->validate();
     }
 
     public function email(): Email
     {
         return $this->email;
+    }
+
+    public function changeEmail(Email $email): void
+    {
+        $this->email = $email;
+        $this->validate();
     }
 
     public function verifyEmail($newCode): bool
@@ -58,14 +68,14 @@ class User implements IValidable {
         return $this->email->verify($newCode);
     }
 
-    public function password(): string | PlainTextPassword
+    public function plainTextPassword(): string | PlainTextPassword
     {
-        return $this->password;
+        return $this->password->password;
     }
 
     public function changePassword(PlainTextPassword $password): void
     {
-        $this->password = $password->password();
+        $this->password = $password;
     }
 
     public function firstName(): string
@@ -83,7 +93,7 @@ class User implements IValidable {
         return $this->birthDate->format('Y-m-d');
     }
 
-    public function document(): IDocument 
+    public function document(): Document 
     {
         return $this->document;
     }
@@ -93,9 +103,29 @@ class User implements IValidable {
         return $this->firstName . ' ' . $this->lastName;
     }
 
-    public function validate(UserValidation $userValidation): ValidationResult
+    public function validate(): ValidationResult
     {
-        return $this->email->validate();
+        $userValidationResult = $this->userValidation->validateFromUser($this);
+        $userValidationResult->addAnotherValidationResult($this->email->validate());
+        $userValidationResult->addAnotherValidationResult($this->document->validate());
+        $userValidationResult->addAnotherValidationResult($this->address->validate());
 
+        if($this->password){
+            $this->password->setOwnerData($this->firstName, $this->lastName, $this->birthDate);
+            $userValidationResult->addAnotherValidationResult($this->password->validate());
+        }
+
+        return $userValidationResult;
     }
-}
+
+    public function validationRules(): ValidationList
+    {
+        $validationList = $this->userValidation->allRules();
+        $validationList->addMultipleRules(...$this->email->validationRules()->validations());
+        $validationList->addMultipleRules(...$this->document->validationRules()->validations());
+        $validationList->addMultipleRules(...$this->address->validationRules()->validations());
+
+        $validationList->addMultipleRules(...$this->password->validationRules()->validations());
+
+        return $validationList;
+}}

@@ -2,12 +2,13 @@
 namespace App\Domain\Account\User;
 
 use DateTime;
-use App\Domain\Validations\IValidable;
-use App\Domain\Account\User\EmailValidation;
+use App\Domain\Validations\Validable;
+use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\IVerificationCode;
+use App\Domain\Account\User\ValidationRules\EmailValidation;
 
-class Email implements IValidable
+class Email extends Validable
 {
     public function __construct(
         public readonly string $address, 
@@ -44,5 +45,10 @@ class Email implements IValidable
     public function validate(): ValidationResult
     {
         return $this->emailValidationRules->validateEmail($this->address);
+    }
+
+    public function validationRules(): ValidationList
+    {
+        return $this->emailValidationRules->allRules();
     }
 }
