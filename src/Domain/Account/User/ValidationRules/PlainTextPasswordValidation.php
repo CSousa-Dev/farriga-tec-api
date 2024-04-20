@@ -1,5 +1,5 @@
 <?php
-namespace App\Domain\Account\User;
+namespace App\Domain\Account\User\ValidationRules;
 
 use DateTime;
 use App\Domain\Validations\Validator;
@@ -30,7 +30,9 @@ class PlainTextPasswordValidation extends ValidationMaker
         $especialChar = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) {
-                    return !self::hasSafeSpecialCharacter($password);
+                    if(!self::hasSafeSpecialCharacter($password)) return 'Deve conter pelo menos um caractere especial. Ex: !@#$%^&*().';
+
+                    return null;
                 }
             ),
             field: 'Senha',
@@ -40,27 +42,23 @@ class PlainTextPasswordValidation extends ValidationMaker
         $lowerCase = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) {
-                    return !self::hasLowerCaseLetter($password); 
+                    if(!self::hasLowerCaseLetter($password)) return 'Deve conter pelo menos uma letra minúscula.';
+                    
+                    return null;
                 }
             ),
             field: 'Senha',
             message: 'Deve conter pelo menos uma letra minúscula.'
         );
 
-        $insecureChar = new ValidationRule(
-            validationRule: $this->constraints->callback(
-                function ($password) {
-                    return self::hasInsecureCharacter($password);
-                }
-            ),
-            field: 'Senha',
-            message: 'Não pode conter caracteres especiais como: " \' \ / < > | ` ~'
-        );
-
         $sequential = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) {
-                    return !self::noSequentialNumbersOrLetters($password);
+                    $matches = self::numbersSequencesOrLettersSequencesFound($password);
+
+                    if($matches) return 'Não pode conter sequências óbvias de números ou letras. Sequencia(s) encontrada(s): ' . implode(', ', $matches);
+
+                    return null;
                 }
             ),
             field: 'Senha',
@@ -70,7 +68,9 @@ class PlainTextPasswordValidation extends ValidationMaker
         $consecutive = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) {
-                    return !self::noMoreThanTwoConsecutiveCharacters($password);
+                    if(!self::noMoreThanTwoConsecutiveCharacters($password)) return 'Não pode conter mais de dois caracteres iguais consecutivos.';
+
+                    return null;
                 }
             ),
             field: 'Senha',
@@ -80,7 +80,9 @@ class PlainTextPasswordValidation extends ValidationMaker
         $upperCase = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) {
-                    return !self::hasUpperCaseLetter($password);
+                    if(!self::hasUpperCaseLetter($password)) return 'Deve conter pelo menos uma letra maiúscula.';
+
+                    return null;
                 }
             ),
             field: 'Senha',
@@ -92,13 +94,16 @@ class PlainTextPasswordValidation extends ValidationMaker
                 min: 8,
             ),
             field: 'Senha',
-            message: 'A senha deve conter no mínimo 8 caracteres.'
+            message: 'A senha deve conter no mínimo 8 caracteres.',
+            messageType: 'minMessage'
         );
 
         $mustNotContainBirthdate = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) use ($birthDate) {
-                    return self::checkPasswordContainADate($password, $birthDate);
+                    if(self::checkPasswordContainADate($password, $birthDate)) return 'Não pode conter sua data de nascimento.';
+
+                    return null;
                 }
             ),
             field: 'Senha',
@@ -108,29 +113,51 @@ class PlainTextPasswordValidation extends ValidationMaker
         $mustNotContainFirstName = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) use ($firstName) {
-                    return stripos(strtoupper($password), strtoupper($firstName)) !== false;
+
+                    if($firstName === null) return null;
+
+                    if(stripos(strtoupper($password), strtoupper($firstName)) !== false) return 'Não pode conter seu nome.';
+
+                    return null;
                 }
             ),
             field: 'Senha',
-            message: 'Não pode conter o seu nome na senha.'
+            message: 'Não pode conter seu nome.'
         );
 
         $mustNotContainLastName = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) use ($lastName) {
-                    return stripos(strtoupper($password), strtoupper($lastName)) !== false;
+
+                    if($lastName === null) return null;
+
+                    if(stripos(strtoupper($password), strtoupper($lastName)) !== false) return 'Não pode conter seu sobrenome.';
+
+                    return null;
                 }
             ),
             field: 'Senha',
-            message: 'Não pode conter o seu sobrenome na senha.'
+            message: 'Não pode conter seu sobrenome na senha.'
+        );
+
+        $needAtLeastOneNumber = new ValidationRule(
+            validationRule: $this->constraints->callback(
+                function ($password) {
+                    if(!preg_match('/[0-9]/', $password)) return 'Deve conter pelo menos um número.';
+
+                    return null;
+                }
+            ),
+            field: 'Senha',
+            message: 'Deve conter pelo menos um número.'
         );
 
         return [
+            $needAtLeastOneNumber,
             $especialChar,
             $lowerCase,
-            $insecureChar,
             $sequential,
-            $consecutive,
+            $consecutive, 
             $upperCase,
             $minEightChars,
             $mustNotContainBirthdate,
@@ -157,21 +184,25 @@ class PlainTextPasswordValidation extends ValidationMaker
         return preg_match('/[a-z]/', $password);
     }
 
-    private static function hasInsecureCharacter($password) 
-    {
-        $insecureCharacters = ['"', "'", '\\', '/', '<', '>', '|', '`', '~'];
-        
-        foreach ($insecureCharacters as $char) {
-            if (strpos($password, $char) !== false) {
-                return true;
+    private static function numbersSequencesOrLettersSequencesFound($password) {
+        $sequences = [
+            'abc', 'bcd', 'cde', 'def', 'efg', 'fgh', 'ghi', 'hij', 'ijk', 'jkl',
+            'klm', 'lmn', 'mno', 'nop', 'opq', 'pqr', 'qrs', 'rst', 'stu', 'tuv',
+            'uvw', 'vwx', 'wxy', 'xyz', 'zyx', 'yxw', 'xwv', 'wvu', 'vut', 'uts',
+            'tsr', 'srq', 'rqp', 'qpo', 'pon', 'onm', 'nml', 'mlk', 'lkj', 'kji',
+            'jih', 'ihg', 'hgf', 'gfe', 'fed', 'edc', 'dcb', 'cba',
+            '123', '234', '345', '456', '567', '678', '789', '987', '876', '765',
+            '654', '543', '432', '321', '210'
+        ];
+
+        $matches = [];
+        foreach ($sequences as $sequence) {
+            if (strpos($password, $sequence) !== false) {
+                $matches[] = $sequence;
             }
         }
-        
-        return false;
-    }
 
-    private static function noSequentialNumbersOrLetters($password) {
-        return !preg_match('/(\d{4,})|([a-zA-Z]{4,})/', $password);
+        return $matches;
     }
         
     private static function noMoreThanTwoConsecutiveCharacters($password) {
