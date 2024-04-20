@@ -1,11 +1,13 @@
 <?php
+namespace App\Tests\Unity\Account\User\Validations;
 
+use DateTime;
 use App\Infra\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
 use App\Infra\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 
-class UserBirthDateTest extends TestCase
+class UserBirthDateValidationTest extends TestCase
 {
     private UserValidation $userValidation;
     public function setUp(): void

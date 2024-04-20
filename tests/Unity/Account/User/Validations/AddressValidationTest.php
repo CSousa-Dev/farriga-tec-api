@@ -1,10 +1,11 @@
 <?php 
-use Monolog\Test\TestCase;
+namespace App\Tests\Unity\Account\User\Validations;
 use App\Infra\SymfonyValidator;
+use PHPUnit\Framework\TestCase;
 use App\Infra\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\AddressValidation;
 
-class UserAddressTest extends TestCase
+class AddressValidationTest extends TestCase
 {
     private AddressValidation $addressValidation;
     public function setUp(): void

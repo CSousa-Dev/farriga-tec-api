@@ -1,11 +1,12 @@
 <?php
+namespace App\Tests\Unity\Account\User\Validations;
 
-use Monolog\Test\TestCase;
 use App\Infra\SymfonyValidator;
+use PHPUnit\Framework\TestCase;
 use App\Infra\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\EmailValidation;
 
-class UserEmailTest extends TestCase
+class EmailValidationTest extends TestCase
 {
     private EmailValidation $emailValidation;
     public function setUp(): void

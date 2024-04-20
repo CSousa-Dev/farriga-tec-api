@@ -1,12 +1,12 @@
 <?php
-namespace App\Tests\Unity\Account\User;
+namespace App\Tests\Unity\Account\User\Validations;
 
 use App\Infra\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
 use App\Infra\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\PlainTextPasswordValidation;
 
-class UserPasswordTest extends TestCase
+class PlainPasswordValidationTest extends TestCase
 {
     private SymfonyValidator $validator;
     private PlainTextPasswordValidation $passwordValidation;

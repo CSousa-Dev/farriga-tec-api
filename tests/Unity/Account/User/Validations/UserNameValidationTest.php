@@ -1,12 +1,12 @@
 <?php
+namespace App\Tests\Unity\Account\User\Validations;
 
 use App\Infra\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
 use App\Infra\SymfonyValidationConstraints;
-use Symfony\Component\Validator\ValidatorBuilder;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 
-class UserNameTest extends TestCase
+class UserNameValidationTest extends TestCase
 {
     private UserValidation $userValidation;
     public function setUp(): void
