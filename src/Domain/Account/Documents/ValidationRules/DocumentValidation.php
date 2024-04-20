@@ -9,7 +9,7 @@ use App\Domain\Validations\ValidationRule;
 use App\Domain\Validations\ValidationMaker;
 use App\Domain\Validations\ValidationResult;
 
-class DocumentValidator extends ValidationMaker
+class DocumentValidation extends ValidationMaker
 {
 
     /**

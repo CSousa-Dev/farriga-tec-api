@@ -1,16 +1,17 @@
 <?php 
 namespace App\Domain\Account\Documents;
 
+use App\Domain\Account\Documents\Document;
+use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationResult;
-use App\Domain\Account\User\Documents\IDocument;
-use App\Domain\Account\Documents\ValidationRules\DocumentValidator;
+use App\Domain\Account\Documents\ValidationRules\DocumentValidation;
 
-class Cpf implements IDocument
+class Cpf extends Document
 {
     private readonly string $type;
     private readonly string $country;
 
-    public function __construct(private DocumentValidator $documentValidator, private readonly string $number)
+    public function __construct(private DocumentValidation $documentValidator, private readonly string $number)
     {
         $this->type = 'CPF';
         $this->country = 'br';
@@ -35,4 +36,9 @@ class Cpf implements IDocument
     {
         return $this->documentValidator->validate($this->type, $this->number);
     }   
+
+    public function validationRules(): ValidationList
+    {
+        return $this->documentValidator->allRules();
+    }
 }
