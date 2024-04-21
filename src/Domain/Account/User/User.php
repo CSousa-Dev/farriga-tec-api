@@ -10,6 +10,7 @@ use App\Domain\Account\Documents\Document;
 use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\ValidationRules\UserValidation;
+use SecurityInfo;
 
 class User extends Validable {
 
@@ -22,7 +23,8 @@ class User extends Validable {
         private Document $document,
         private UserValidation $userValidation,
         private DateTime $birthDate,
-        private Email $email 
+        private Email $email,
+        private readonly ?SecurityInfo $securityInfo = null
     )
     {}
     
