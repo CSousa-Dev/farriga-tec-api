@@ -1,12 +1,12 @@
 <?php
-namespace App\Domain\Account\Services;
+namespace App\Domain\Account\Services\RegisterUser;
 
 use App\Domain\Account\User\User;
-use App\Domain\Repository\Account\UserRepository;
+use App\Domain\Account\User\PasswordHasher;
+use App\Domain\Account\Repository\UserRepository;
 use App\Domain\Account\Services\RegisterUser\UserEmailAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\UserDocumentAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\RegisterUserViolateValidationConstraintException;
-use App\Domain\Account\User\PasswordHasher;
 
 class RegisterUser
 {
@@ -23,7 +23,7 @@ class RegisterUser
         $this->checkUserDocumentAlreadyRegistered();
         $this->userRepository->registerNewUser(
             $this->user,
-            $this->passwordHasher->hash($this->user->plainTextPassword()->password)
+            $this->passwordHasher->hash($this->user->plainTextPassword())
         );
     }
 
@@ -36,13 +36,13 @@ class RegisterUser
 
     private function checkUserEmailAlreadyRegistered()
     {
-        if($this->userRepository->isEmailAlreadyRegistered($this->user));
+        if($this->userRepository->isEmailAlreadyRegistered($this->user))
             throw new UserEmailAlreadyRegisteredException($this->user);
     }
 
     private function checkUserDocumentAlreadyRegistered()
     {
-        if($this->userRepository->isDocumentAlreadyRegistered($this->user));
+        if($this->userRepository->isDocumentAlreadyRegistered($this->user))
             throw new UserDocumentAlreadyRegisteredException($this->user);
     }
 }
