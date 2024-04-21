@@ -1,5 +1,5 @@
 <?php
-namespace App\Domain\Repository\Account;
+namespace App\Domain\Account\Repository;
 
 use App\Domain\Account\User\User;
 
