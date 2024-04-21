@@ -2,35 +2,36 @@
 namespace App\Domain\Account\Services\RegisterUser;
 
 use App\Domain\Account\User\User;
-use App\Domain\Account\User\PasswordHasher;
 use App\Domain\Account\Repository\UserRepository;
 use App\Domain\Account\Services\RegisterUser\UserEmailAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\UserDocumentAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\RegisterUserViolateValidationConstraintException;
+use App\Domain\Account\User\PlainTextPassword;
 
 class RegisterUser
 {
     public function __construct(
         private User $user,
         private UserRepository $userRepository,
-        private PasswordHasher $passwordHasher
+        private PlainTextPassword $plainTextPassword,
     ){}
 
     public function execute(): void
     {
-        $this->validateUser();
+        $this->validateConstraints();
         $this->checkUserEmailAlreadyRegistered();
         $this->checkUserDocumentAlreadyRegistered();
         $this->userRepository->registerNewUser(
             $this->user,
-            $this->passwordHasher->hash($this->user->plainTextPassword())
+            $this->plainTextPassword
         );
     }
 
-    private function validateUser()
+    private function validateConstraints()
     {
         $validationResult = $this->user->validate();
-        if(!$this->user->isValid())
+        $validationResult->addAnotherValidationResult($this->plainTextPassword->validate());
+        if($validationResult->hasErrors())
             throw new RegisterUserViolateValidationConstraintException($validationResult, $this->user);
     }
 

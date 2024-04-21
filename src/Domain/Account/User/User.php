@@ -9,14 +9,11 @@ use App\Domain\Validations\Validable;
 use App\Domain\Account\Documents\Document;
 use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationResult;
-use App\Domain\Account\User\PlainTextPassword;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 
 class User extends Validable {
 
     private Address $address;
-
-    private ?PlainTextPassword $password = null;
 
     public function __construct(
         public readonly string $id, 
@@ -68,15 +65,6 @@ class User extends Validable {
         return $this->email->verify($newCode);
     }
 
-    public function plainTextPassword(): string | PlainTextPassword
-    {
-        return $this->password->password;
-    }
-
-    public function changePassword(PlainTextPassword $password): void
-    {
-        $this->password = $password;
-    }
 
     public function firstName(): string
     {
@@ -110,11 +98,6 @@ class User extends Validable {
         $userValidationResult->addAnotherValidationResult($this->document->validate());
         $userValidationResult->addAnotherValidationResult($this->address->validate());
 
-        if($this->password){
-            $this->password->setOwnerData($this->firstName, $this->lastName, $this->birthDate);
-            $userValidationResult->addAnotherValidationResult($this->password->validate());
-        }
-
         return $userValidationResult;
     }
 
@@ -124,8 +107,6 @@ class User extends Validable {
         $validationList->addMultipleRules(...$this->email->validationRules()->validations());
         $validationList->addMultipleRules(...$this->document->validationRules()->validations());
         $validationList->addMultipleRules(...$this->address->validationRules()->validations());
-
-        $validationList->addMultipleRules(...$this->password->validationRules()->validations());
 
         return $validationList;
 }}

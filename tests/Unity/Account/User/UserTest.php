@@ -17,7 +17,6 @@ class UserTest extends TestCase
         $emailMock          = $this->createMock(Email::class);
         $documentMock       = $this->createMock(Cpf::class);
         $addressMock        = $this->createMock(Address::class);
-        $passwordMock       = $this->createMock(PlainTextPassword::class);
         $userValidationMock = $this->createMock(UserValidation::class);
 
         // Setup mock methods
@@ -28,9 +27,6 @@ class UserTest extends TestCase
                     ->method('validate');
 
         $addressMock->expects($this->atLeastOnce())
-                    ->method('validate');
-
-        $passwordMock->expects($this->atLeastOnce())
                     ->method('validate');
 
         $userValidationMock->expects($this->atLeastOnce())
@@ -50,7 +46,6 @@ class UserTest extends TestCase
         );
 
         $user->changeHomeAddress($addressMock);
-        $user->changePassword($passwordMock);
 
         // Call validate method
         $user->validate();
