@@ -13,11 +13,12 @@ use App\Domain\Account\User\ValidationRules\EmailValidation;
 use App\Domain\Account\Services\RegisterUser\UserEmailAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\UserDocumentAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\RegisterUserViolateValidationConstraintException;
+use App\Domain\Account\User\PlainTextPassword;
 
 class RegisterUserTest extends TestCase
 {
     private $userRepositoryMock;
-    private $passwordHasherMock;
+    private $plainTextPassword;
     private $userMock;
     private $registerUser;
 
@@ -26,11 +27,12 @@ class RegisterUserTest extends TestCase
     protected function setUp(): void
     {
         $this->userRepositoryMock = $this->createMock(UserRepository::class);
-        $this->passwordHasherMock = $this->createMock(PasswordHasher::class);
+        $this->plainTextPassword = $this->createMock(PlainTextPassword::class);
         $this->userMock = $this->createMock(User::class);
         $this->emailMock = $this->getMockBuilder(Email::class)
                      ->setConstructorArgs(['test@test.com', $this->createMock(EmailValidation::class)])
                      ->getMock();
+                     
 
         $this->userMock->expects($this->any())
             ->method('email')
@@ -40,15 +42,23 @@ class RegisterUserTest extends TestCase
         $this->registerUser = new RegisterUser(
             $this->userMock,
             $this->userRepositoryMock,
-            $this->passwordHasherMock
+            $this->plainTextPassword
         );
     }
 
     public function testSuccessfulRegistration()
     {
+        $passValidationResultMock = $this->createMock(
+            ValidationResult::class
+        );
+        
+        $passValidationResultMock->expects($this->once())
+            ->method('hasErrors')
+            ->willReturn(false);
+
         $this->userMock->expects($this->once())
-            ->method('isValid')
-            ->willReturn(true);
+            ->method('validate')
+            ->willReturn($passValidationResultMock);
 
         $this->userRepositoryMock->expects($this->once())
             ->method('isEmailAlreadyRegistered')
@@ -57,10 +67,10 @@ class RegisterUserTest extends TestCase
         $this->userRepositoryMock->expects($this->once())
             ->method('isDocumentAlreadyRegistered')
             ->willReturn(false);
-
-        $this->passwordHasherMock->expects($this->once())
-            ->method('hash')
-            ->willReturn('hashed_password');
+        
+        $this->plainTextPassword->expects($this->once())
+            ->method('validate')
+            ->willReturn($this->createMock(ValidationResult::class));
 
         $this->userRepositoryMock->expects($this->once())
             ->method('registerNewUser');
@@ -71,10 +81,17 @@ class RegisterUserTest extends TestCase
     public function testValidationFailure()
     {
         $this->expectException(RegisterUserViolateValidationConstraintException::class);
+        $failureValidationResultMock = $this->createMock(
+            ValidationResult::class
+        );
+        
+        $failureValidationResultMock->expects($this->once())
+            ->method('hasErrors')
+            ->willReturn(true);
 
         $this->userMock->expects($this->once())
-            ->method('isValid')
-            ->willReturn(false);
+            ->method('validate')
+            ->willReturn($failureValidationResultMock);
 
         $this->registerUser->execute();
     }
@@ -82,14 +99,17 @@ class RegisterUserTest extends TestCase
     public function testUserEmailAlreadyRegistered()
     {
         $this->expectException(UserEmailAlreadyRegisteredException::class);
+        $passValidationResultMock = $this->createMock(
+            ValidationResult::class
+        );
+        
+        $passValidationResultMock->expects($this->once())
+            ->method('hasErrors')
+            ->willReturn(false);
 
         $this->userMock->expects($this->once())
             ->method('validate')
-            ->willReturn($this->createMock(ValidationResult::class));
-        
-        $this->userMock->expects($this->once())
-            ->method('isValid')
-            ->willReturn(true);
+            ->willReturn($passValidationResultMock);
 
         $this->userRepositoryMock->expects($this->once())
             ->method('isEmailAlreadyRegistered')
@@ -101,15 +121,18 @@ class RegisterUserTest extends TestCase
     public function testUserDocumentAlreadyRegistered()
     {
         $this->expectException(UserDocumentAlreadyRegisteredException::class);
+        
+        $passValidationResultMock = $this->createMock(
+            ValidationResult::class
+        );
+        
+        $passValidationResultMock->expects($this->once())
+            ->method('hasErrors')
+            ->willReturn(false);
 
         $this->userMock->expects($this->once())
-        ->method('validate')
-        ->willReturn($this->createMock(ValidationResult::class));
-    
-        $this->userMock->expects($this->once())
-            ->method('isValid')
-            ->willReturn(true);
-
+            ->method('validate')
+            ->willReturn($passValidationResultMock);
 
         $this->userRepositoryMock->expects($this->once())
             ->method('isEmailAlreadyRegistered')
