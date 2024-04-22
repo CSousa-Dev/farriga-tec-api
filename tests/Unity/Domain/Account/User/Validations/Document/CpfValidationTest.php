@@ -1,4 +1,5 @@
 <?php
+namespace App\Tests\Unity\Domain\Account\User\Validations\Document;
 
 use App\Infra\SymfonyValidator;
 use PHPUnit\Framework\TestCase;

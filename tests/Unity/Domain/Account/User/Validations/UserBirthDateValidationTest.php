@@ -1,5 +1,5 @@
 <?php
-namespace App\Tests\Unity\Account\User\Validations;
+namespace App\Tests\Unity\Domain\Account\User\Validations;
 
 use DateTime;
 use App\Infra\SymfonyValidator;

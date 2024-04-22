@@ -1,5 +1,5 @@
 <?php 
-namespace App\Tests\Unity\Account\User\Validations;
+namespace App\Tests\Unity\Domain\Account\User\Validations;
 use App\Infra\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
 use App\Infra\SymfonyValidationConstraints;

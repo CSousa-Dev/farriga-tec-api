@@ -1,4 +1,5 @@
 <?php
+namespace App\Tests\Unity\Domain\Account\User;
 
 use PHPUnit\Framework\TestCase;
 use App\Domain\Account\User\User;
