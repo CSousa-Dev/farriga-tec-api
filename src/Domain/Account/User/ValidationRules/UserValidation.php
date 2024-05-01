@@ -74,7 +74,7 @@ class UserValidation extends ValidationMaker
         $nameCannotBeEmpty = new ValidationRule(
             validationRule: $this->constraints->notNull(), 
             message: 'É obrigatório.',
-            field: 'Nome'
+            field: 'firstName'
         );
 
         $nameMustHaveAtLeastTreeCharacters = new ValidationRule(
@@ -82,7 +82,7 @@ class UserValidation extends ValidationMaker
                 min: 3, 
             ), 
             messageType: 'minMessage',
-            field: 'Nome',
+            field: 'firstName',
             message: 'Deve ter no mínimo 3 caracteres.'
         );
 
@@ -91,7 +91,7 @@ class UserValidation extends ValidationMaker
                 max: 10, 
             ), 
             messageType: 'maxMessage',
-            field: 'Nome',
+            field: 'firstName',
             message:  'Deve ter no máximo 10 caracteres.'
         );
 
@@ -100,7 +100,7 @@ class UserValidation extends ValidationMaker
                 pattern: '/[0-9]/', 
                 match: false,
             ), 
-            field: 'Nome',
+            field: 'firstName',
             message: 'Não pode conter números.'
         );
 
@@ -116,7 +116,7 @@ class UserValidation extends ValidationMaker
     {   
         $nameCannotBeEmpty = new ValidationRule(
             validationRule: $this->constraints->notNull(), 
-            field: 'Sobrenome',
+            field: 'lastName',
             message: 'É obrigatório.'
         );
 
@@ -126,7 +126,7 @@ class UserValidation extends ValidationMaker
             ), 
             messageType: 'minMessage',
             message: 'Deve ter no mínimo 3 caracteres.',
-            field: 'Sobrenome'
+            field: 'lastName'
         );
 
         $nameMustHaveMaxTenCharacters = new ValidationRule(
@@ -135,7 +135,7 @@ class UserValidation extends ValidationMaker
             ),         
             messageType: 'maxMessage',
             message: 'Deve ter no máximo 10 caracteres.',
-            field: 'Sobrenome'
+            field: 'lastName'
         );
 
         $nameMustDontHaveNumbers = new ValidationRule(
@@ -144,7 +144,7 @@ class UserValidation extends ValidationMaker
                 match: false,
             ), 
             message: 'Não pode conter números.',
-            field: 'Sobrenome'
+            field: 'lastName'
         );
 
         return [
@@ -162,7 +162,7 @@ class UserValidation extends ValidationMaker
                 value: '-12 years',
             ), 
             message: 'A idade mínima para criar uma conta é de 12 anos. Crie uma conta com a ajuda de um responsável.',
-            field: 'Data de Nascimento'
+            field: 'birthDate'
         );
     }
 
@@ -171,12 +171,12 @@ class UserValidation extends ValidationMaker
         $birthDateCannotBeEmpty = new ValidationRule(
             validationRule: $this->constraints->notNull(), 
             message: 'É obrigatório.',
-            field: 'Data de Nascimento'
+            field: 'birthDate'
         );
 
         $birthDateMustBeValidDate = new ValidationRule(
             validationRule: $this->constraints->isDate(), 
-            field: 'Data de Nascimento',
+            field: 'birthDate',
             message: 'Deve ser uma data em formato válido.'
         );
 

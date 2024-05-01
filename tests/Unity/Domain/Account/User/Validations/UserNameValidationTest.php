@@ -1,9 +1,9 @@
 <?php
 namespace App\Tests\Unity\Domain\Account\User\Validations;
 
-use App\Infra\SymfonyValidator;
+use App\Service\Validation\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
-use App\Infra\SymfonyValidationConstraints;
+use App\Service\Validation\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 
 class UserNameValidationTest extends TestCase
@@ -21,8 +21,8 @@ class UserNameValidationTest extends TestCase
         $userFirstName    = null;
         $validationResult = $this->userValidation->validateFirstName($userFirstName);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Nome', array_keys($validationResult->errors()));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Nome']);
+        $this->assertContains('firstName', array_keys($validationResult->errors()));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['firstName']);
     }
 
     public function testLastNameIsNotEmpty()
@@ -30,8 +30,8 @@ class UserNameValidationTest extends TestCase
         $lastName    = null;
         $validationResult = $this->userValidation->validateLastName($lastName);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Sobrenome', array_keys($validationResult->errors()));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Sobrenome']);
+        $this->assertContains('lastName', array_keys($validationResult->errors()));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['lastName']);
     }
 
     public function testFirstNameMustContainAMinimumOfThreeCharacters()
@@ -39,8 +39,8 @@ class UserNameValidationTest extends TestCase
         $firstName    = 'aa';
         $validationResult = $this->userValidation->validateFirstName($firstName);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Nome', array_keys($validationResult->errors()));
-        $this->assertContains('Deve ter no mínimo 3 caracteres.', $validationResult->errors()['Nome']);
+        $this->assertContains('firstName', array_keys($validationResult->errors()));
+        $this->assertContains('Deve ter no mínimo 3 caracteres.', $validationResult->errors()['firstName']);
     }
 
     public function testLastNameMustContainAMinimumOfThreeCharacters()
@@ -48,8 +48,8 @@ class UserNameValidationTest extends TestCase
         $lastName    = 'aa';
         $validationResult = $this->userValidation->validateLastName($lastName);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Sobrenome', array_keys($validationResult->errors()));
-        $this->assertContains('Deve ter no mínimo 3 caracteres.', $validationResult->errors()['Sobrenome']);
+        $this->assertContains('lastName', array_keys($validationResult->errors()));
+        $this->assertContains('Deve ter no mínimo 3 caracteres.', $validationResult->errors()['lastName']);
     }
 
     public function testFirstNameMustContainAMaximumOfTenCharacters()
@@ -57,8 +57,8 @@ class UserNameValidationTest extends TestCase
         $firstName    = 'aaaaaaaaaaa';
         $validationResult = $this->userValidation->validateFirstName($firstName);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Nome', array_keys($validationResult->errors()));
-        $this->assertContains('Deve ter no máximo 10 caracteres.', $validationResult->errors()['Nome']);
+        $this->assertContains('firstName', array_keys($validationResult->errors()));
+        $this->assertContains('Deve ter no máximo 10 caracteres.', $validationResult->errors()['firstName']);
     }
 
     public function testLastNameMustContainAMaximumOfTenCharacters()
@@ -66,7 +66,7 @@ class UserNameValidationTest extends TestCase
         $lastName    = 'aaaaaaaaaaa';
         $validationResult = $this->userValidation->validateLastName($lastName);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Sobrenome', array_keys($validationResult->errors()));
-        $this->assertContains('Deve ter no máximo 10 caracteres.', $validationResult->errors()['Sobrenome']);
+        $this->assertContains('lastName', array_keys($validationResult->errors()));
+        $this->assertContains('Deve ter no máximo 10 caracteres.', $validationResult->errors()['lastName']);
     }
 }

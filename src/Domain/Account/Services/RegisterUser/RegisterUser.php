@@ -10,27 +10,29 @@ use App\Domain\Account\User\PlainTextPassword;
 
 class RegisterUser
 {
+    private User $user;
     public function __construct(
-        private User $user,
         private UserRepository $userRepository,
-        private PlainTextPassword $plainTextPassword,
     ){}
 
-    public function execute(): void
+    public function execute(PlainTextPassword $plainTextPassword, User $user,
+
+    ): void
     {
-        $this->validateConstraints();
+        $this->user = $user;
+        $this->validateConstraints($plainTextPassword);
         $this->checkUserEmailAlreadyRegistered();
         $this->checkUserDocumentAlreadyRegistered();
         $this->userRepository->registerNewUser(
             $this->user,
-            $this->plainTextPassword
+            $plainTextPassword
         );
     }
 
-    private function validateConstraints()
+    private function validateConstraints($plainTextPassword)
     {
         $validationResult = $this->user->validate();
-        $validationResult->addAnotherValidationResult($this->plainTextPassword->validate());
+        $validationResult->addAnotherValidationResult($plainTextPassword->validate());
         if($validationResult->hasErrors())
             throw new RegisterUserViolateValidationConstraintException($validationResult, $this->user);
     }

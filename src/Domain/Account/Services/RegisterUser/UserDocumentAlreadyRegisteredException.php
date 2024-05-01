@@ -16,7 +16,7 @@ class UserDocumentAlreadyRegisteredException Extends DomainException
     }
     public function defaultMessage(): string
     {
-        return "O documento {$this->user->document()->type()} de número {$this->user->document()->number()} já está cadastrado.";
+        return "O document {$this->user->document()->type()} de número {$this->user->document()->number()} já está cadastrado.";
     }
 
     public function defaultCode(): int

@@ -1,0 +1,4 @@
+Adicionar mensagem de erro quando não encontrar arquivo de configuração na raiz do projeto
+Adicionar arquivo de configuração de exemplo na raiz do projeto de quem o baixou
+Quando não existir nenhuma classe que implemente as funcionanlidades, retornar uma mensagem dizendo que 
+ainda não foram localizadas atributos setados

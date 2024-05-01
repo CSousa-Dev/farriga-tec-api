@@ -17,7 +17,7 @@ class User extends Validable {
     private Address $address;
 
     public function __construct(
-        public readonly string $id, 
+        public readonly ?string $id, 
         private string $firstName,
         private string $lastName,
         private Document $document,

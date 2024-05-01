@@ -1,8 +1,8 @@
 <?php 
 namespace App\Tests\Unity\Domain\Account\User\Validations;
-use App\Infra\SymfonyValidator;
+use App\Service\Validation\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
-use App\Infra\SymfonyValidationConstraints;
+use App\Service\Validation\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\AddressValidation;
 
 class AddressValidationTest extends TestCase
@@ -34,33 +34,33 @@ class AddressValidationTest extends TestCase
         $validationResult->addAnotherValidationResult($this->addressValidation->validateZipCode($zipCode));
 
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Rua', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Endereço']['Rua']);
-        $this->assertContains('Número', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Endereço']['Número']);
-        $this->assertContains('Bairro', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Endereço']['Bairro']);
-        $this->assertContains('Cidade', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Endereço']['Cidade']);
-        $this->assertContains('Estado', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Endereço']['Estado']);
-        $this->assertContains('País', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Endereço']['País']);
-        $this->assertContains('Código Postal', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Endereço']['Código Postal']);
+        $this->assertContains('street', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['homeAddress']['street']);
+        $this->assertContains('number', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['homeAddress']['number']);
+        $this->assertContains('neighborhood', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['homeAddress']['neighborhood']);
+        $this->assertContains('city', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['homeAddress']['city']);
+        $this->assertContains('state', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['homeAddress']['state']);
+        $this->assertContains('country', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['homeAddress']['country']);
+        $this->assertContains('zipCode', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['homeAddress']['zipCode']);
     }
 
     public function testMaxLengthForFields()
     {
-        $street101Characters = 'Rua das Flores, 123, Bairro das Flores, Cidade das Flores, Estado das Flores, País das Flores Rua das';
+        $street101Characters = 'street das Flores, 123, neighborhood das Flores, cidade das Flores, state das Flores, country das Flores street das';
         $number51Characters = '123456789012345678901234567890123456789012345678901';
-        $neighborhood51Characters = 'Bairro das Flores, Bairro das Flores, Bairro das Fl';
-        $city51Characters = 'Cidade das Flores, Cidade das Flores, Cidade das Fl';
-        $state31Characters = 'Estado das Flores, Estado das F';
-        $country31Characters = 'País das Flores, País das Flore';
+        $neighborhood51Characters = 'neighborhood das Flores, neighborhood das Flores, neighborhood das Fl';
+        $city51Characters = 'cidade das Flores, cidade das Flores, cidade das Fl';
+        $state31Characters = 'statae das Flores, state das Fa';
+        $country31Characters = 'country das Flores, country das Flore';
         $zipCode21Characters = '123456789012345678901';
-        $reference101Characters = 'Rua das Flores, 123, Bairro das Flores, Cidade das Flores, Estado das Flores, País das Flores Rua das';
-        $complement101Characters = 'Rua das Flores, 123, Bairro das Flores, Cidade das Flores, Estado das Flores, País das Flores Rua das';
+        $reference101Characters = 'street das Flores, 123, neighborhood das Flores, city das Flores, state das Flores, country das Flores street das';
+        $complement101Characters = 'street das Flores, 123, neighborhood das Flores, city das Flores, state das Flores, country das Flores street das';
 
                 
         $validationResult = $this->addressValidation->validateStreet($street101Characters);
@@ -74,23 +74,23 @@ class AddressValidationTest extends TestCase
         $validationResult->addAnotherValidationResult($this->addressValidation->validateComplement($complement101Characters));
 
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Rua', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 100 caracteres.', $validationResult->errors()['Endereço']['Rua']);
-        $this->assertContains('Número', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 50 caracteres.', $validationResult->errors()['Endereço']['Número']);
-        $this->assertContains('Bairro', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 50 caracteres.', $validationResult->errors()['Endereço']['Bairro']);
-        $this->assertContains('Cidade', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 50 caracteres.', $validationResult->errors()['Endereço']['Cidade']);
-        $this->assertContains('Estado', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 30 caracteres.', $validationResult->errors()['Endereço']['Estado']);   
-        $this->assertContains('País', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 30 caracteres.', $validationResult->errors()['Endereço']['País']);
-        $this->assertContains('Código Postal', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 20 caracteres.', $validationResult->errors()['Endereço']['Código Postal']);
-        $this->assertContains('Referência', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 100 caracteres.', $validationResult->errors()['Endereço']['Referência']);
-        $this->assertContains('Complemento', array_keys($validationResult->errors()['Endereço']));
-        $this->assertContains('Deve ter no máximo 100 caracteres.', $validationResult->errors()['Endereço']['Complemento']);
+        $this->assertContains('street', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 100 caracteres.', $validationResult->errors()['homeAddress']['street']);
+        $this->assertContains('number', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 50 caracteres.', $validationResult->errors()['homeAddress']['number']);
+        $this->assertContains('neighborhood', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 50 caracteres.', $validationResult->errors()['homeAddress']['neighborhood']);
+        $this->assertContains('city', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 50 caracteres.', $validationResult->errors()['homeAddress']['city']);
+        $this->assertContains('state', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 30 caracteres.', $validationResult->errors()['homeAddress']['state']);   
+        $this->assertContains('country', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 30 caracteres.', $validationResult->errors()['homeAddress']['country']);
+        $this->assertContains('zipCode', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 20 caracteres.', $validationResult->errors()['homeAddress']['zipCode']);
+        $this->assertContains('reference', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 100 caracteres.', $validationResult->errors()['homeAddress']['reference']);
+        $this->assertContains('complement', array_keys($validationResult->errors()['homeAddress']));
+        $this->assertContains('Deve ter no máximo 100 caracteres.', $validationResult->errors()['homeAddress']['complement']);
     }
 }

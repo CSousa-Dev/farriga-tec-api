@@ -1,11 +1,12 @@
 <?php
 namespace App\Tests\Unity\Domain\Account\User\Validations\Document;
 
-use App\Infra\SymfonyValidator;
+use App\Service\Validation\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
-use App\Infra\SymfonyValidationConstraints;
+use App\Service\Validation\SymfonyValidationConstraints;
 use App\Domain\Account\Documents\ValidationRules\CpfValidaton;
 use App\Domain\Account\Documents\ValidationRules\DocumentValidation;
+use App\Domain\Account\Documents\ValidationRules\DocumentValidationRulesInterface;
 
 class CpfValidationTest extends TestCase
 {
@@ -16,7 +17,12 @@ class CpfValidationTest extends TestCase
         $constraints = new SymfonyValidationConstraints();
         $validator = new SymfonyValidator();
         $validationsForCpf = new CpfValidaton($constraints);
-        $this->DocumentValidation = new DocumentValidation('CPF', $constraints, $validator, $validationsForCpf);
+        
+        $documentsValidations = $this->createMock(DocumentValidationRulesInterface::class);
+        $documentsValidations->method('allDocumentsValidations')
+            ->willReturn([$validationsForCpf]);
+        
+            $this->DocumentValidation = new DocumentValidation($constraints, $validator, $documentsValidations);
         parent::setUp();
     }
 
@@ -26,7 +32,7 @@ class CpfValidationTest extends TestCase
         $result = $this->DocumentValidation->validate('CPF', $cpf);
 
         $this->assertTrue($result->hasErrors());
-        $this->assertContains('Deve conter apenas números.', $result->errors()['Documento']);
+        $this->assertContains('Deve conter apenas números.', $result->errors()['document']);
     }    
 
     public function testIfCpfHasSizeDifferentFrom11DigitsReturnsValidationError()
@@ -35,7 +41,7 @@ class CpfValidationTest extends TestCase
         $result = $this->DocumentValidation->validate('CPF', $cpf);
 
         $this->assertTrue($result->hasErrors());
-        $this->assertContains('Deve conter 11 caracteres.', $result->errors()['Documento']);
+        $this->assertContains('Deve conter 11 caracteres.', $result->errors()['document']);
     }
 
     public function testIfValidatingACpfWithAllEqualNumbersReturnsError()
@@ -43,7 +49,7 @@ class CpfValidationTest extends TestCase
         $cpf = '111.111.111-11';
         $result = $this->DocumentValidation->validate('CPF', $cpf);
         $this->assertTrue($result->hasErrors());
-        $this->assertContains('Não pode conter todos os números iguais.', $result->errors()['Documento']);
+        $this->assertContains('Não pode conter todos os números iguais.', $result->errors()['document']);
     }
 
     public function testIfValidatingCpfWithOnlyInvalidDigitsReturnsError()
@@ -51,7 +57,7 @@ class CpfValidationTest extends TestCase
         $cpf = "496.018.570-86";
         $result = $this->DocumentValidation->validate('CPF', $cpf);
         $this->assertTrue($result->hasErrors());
-        $this->assertContains('Digitos inválidos.', $result->errors()['Documento']);
+        $this->assertContains('Digitos inválidos.', $result->errors()['document']);
     }
 
     public function testIfCreatingAValidCpfDoesNotReturnError()

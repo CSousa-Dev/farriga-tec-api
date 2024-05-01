@@ -35,7 +35,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Deve conter pelo menos um caractere especial. Ex: !@#$%^&*().'
         );
 
@@ -47,7 +47,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Deve conter pelo menos uma letra minúscula.'
         );
 
@@ -61,7 +61,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Não pode conter sequências de números ou letras.'
         );
 
@@ -73,7 +73,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Não pode conter mais de dois caracteres iguais consecutivos.'
         );
 
@@ -85,7 +85,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Deve conter pelo menos uma letra maiúscula.'
         );
 
@@ -93,7 +93,7 @@ class PlainTextPasswordValidation extends ValidationMaker
             validationRule: $this->constraints->length(
                 min: 8,
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'A senha deve conter no mínimo 8 caracteres.',
             messageType: 'minMessage'
         );
@@ -106,7 +106,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Não pode conter sua data de nascimento.'
         );
 
@@ -121,7 +121,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Não pode conter seu nome.'
         );
 
@@ -136,7 +136,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Não pode conter seu sobrenome na senha.'
         );
 
@@ -148,7 +148,7 @@ class PlainTextPasswordValidation extends ValidationMaker
                     return null;
                 }
             ),
-            field: 'Senha',
+            field: 'password',
             message: 'Deve conter pelo menos um número.'
         );
 

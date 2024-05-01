@@ -24,4 +24,6 @@ interface IConstraints
     public function greaterThanOrEqual($value);
     public function greaterThan($value);
     public function lessThanOrEqual($value);
+
+    public function isTrue();
 }

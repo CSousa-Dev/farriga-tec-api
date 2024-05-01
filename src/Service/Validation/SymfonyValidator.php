@@ -1,5 +1,5 @@
 <?php
-namespace App\Infra;
+namespace App\Service\Validation;
 
 use App\Domain\Validations\ErrorsList;
 use App\Domain\Validations\Validator;

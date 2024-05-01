@@ -2,9 +2,9 @@
 namespace App\Tests\Unity\Domain\Account\User\Validations;
 
 use DateTime;
-use App\Infra\SymfonyValidator;
+use App\Service\Validation\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
-use App\Infra\SymfonyValidationConstraints;
+use App\Service\Validation\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 
 class UserBirthDateValidationTest extends TestCase
@@ -22,8 +22,8 @@ class UserBirthDateValidationTest extends TestCase
         $birthDate    = null;
         $validationResult = $this->userValidation->validateBirthDateYmd($birthDate);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Data de Nascimento', array_keys($validationResult->errors()));
-        $this->assertContains('É obrigatório.', $validationResult->errors()['Data de Nascimento']);
+        $this->assertContains('birthDate', array_keys($validationResult->errors()));
+        $this->assertContains('É obrigatório.', $validationResult->errors()['birthDate']);
     }
 
     public function testBirthDateMustBeAValidDate()
@@ -31,8 +31,8 @@ class UserBirthDateValidationTest extends TestCase
         $birthDate    =  'a25/12/1990';
         $validationResult = $this->userValidation->validateBirthDateYmd($birthDate);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Data de Nascimento', array_keys($validationResult->errors()));
-        $this->assertContains('Deve ser uma data em formato válido.', $validationResult->errors()['Data de Nascimento']);
+        $this->assertContains('birthDate', array_keys($validationResult->errors()));
+        $this->assertContains('Deve ser uma data em formato válido.', $validationResult->errors()['birthDate']);
     }
 
     public function testMinAgeIs12Years()
@@ -40,8 +40,8 @@ class UserBirthDateValidationTest extends TestCase
         $birthDate    = new DateTime('now');
         $validationResult = $this->userValidation->validateBirthDateYmd($birthDate->format('Y-m-d'));
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Data de Nascimento', array_keys($validationResult->errors()));
-        $this->assertContains('A idade mínima para criar uma conta é de 12 anos. Crie uma conta com a ajuda de um responsável.', $validationResult->errors()['Data de Nascimento']);
+        $this->assertContains('birthDate', array_keys($validationResult->errors()));
+        $this->assertContains('A idade mínima para criar uma conta é de 12 anos. Crie uma conta com a ajuda de um responsável.', $validationResult->errors()['birthDate']);
     }
 
     public function testValidDate()

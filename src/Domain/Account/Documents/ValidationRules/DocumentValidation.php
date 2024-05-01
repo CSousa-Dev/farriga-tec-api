@@ -29,9 +29,9 @@ class DocumentValidation extends ValidationMaker
      */
     private ?ValidationsForDocuments $matchValidationForDocument = null;
 
-    public function __construct(private string $documentType, private IConstraints $constraints, private Validator $validator, ValidationsForDocuments ...$validationsForDocuments)
+    public function __construct(private IConstraints $constraints, private Validator $validator, DocumentValidationRulesInterface $documentValidationRules)
     {
-        $this->validationsForDocuments = $validationsForDocuments;
+        $this->validationsForDocuments = $documentValidationRules->allDocumentsValidations();
     }
 
     public function validate($documentType, $options): ValidationResult
@@ -39,9 +39,13 @@ class DocumentValidation extends ValidationMaker
         $this->getValidationType($documentType);
 
         if($this->matchValidationForDocument === null) 
-            throw new \InvalidArgumentException("Document type not found.");
+            return $this->validator->validate(
+                new ValidationList(
+                    $this->undefinedTypeRule()
+                )
+            );
         
-
+        
         return $this->validator->validate(
             $this->foreachRuleSetValue(
                 $this->matchValidationForDocument->optionsToValue($options), 
@@ -50,10 +54,18 @@ class DocumentValidation extends ValidationMaker
         );
     }
 
-    public function changeDocumentType($documentType) {
-        $this->documentType = $documentType;
-        $this->getValidationType($documentType);
+
+    private function undefinedTypeRule(): ValidationRule
+    {
+        $rule = new ValidationRule(
+            validationRule: $this->constraints->isTrue(), 
+            message: 'Deve ser informado um document e com tipo válido.',
+            field: 'document'
+        );
+        $rule->setValue(false);
+        return $rule;
     }
+
 
     private function getValidationType($documentType) {
         foreach($this->validationsForDocuments as $validationForDocument) {
@@ -66,12 +78,12 @@ class DocumentValidation extends ValidationMaker
 
     public function allRules(): ValidationList
     {
-        $this->getValidationType($this->documentType);
+        $validationList = new ValidationList();
+        foreach($this->validationsForDocuments as $validationForDocument) {
+            $validationList->addMultipleRules(...$validationForDocument->rules());
+        }
 
-        if($this->matchValidationForDocument === null) 
-            throw new \InvalidArgumentException("Document type not found.");
-
-        return new ValidationList(...$this->matchValidationForDocument->rules());
+        return $validationList;
     }
 
 

@@ -6,6 +6,13 @@
 parameters:
 
 services:
+    App\Domain\Validations\Validator: '@App\Service\Validation\SymfonyValidator'
+
+    App\Domain\Account\Documents\ValidationRules\DocumentValidation: 
+        arguments:
+            $validationsForDocuments: 
+                - '@App\Domain\Account\Documents\ValidationRules\CpfValidaton.php'
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -19,6 +26,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\EventListener\InvalidInputExceptionListener:
+        tags: ['kernel.event_listener']
+
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

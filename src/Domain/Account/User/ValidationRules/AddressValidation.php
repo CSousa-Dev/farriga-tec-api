@@ -85,8 +85,8 @@ class AddressValidation extends ValidationMaker
         $streetMustBeNotBlanck = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: 'É obrigatório.',
-            field: 'Rua',
-            group: 'Endereço'
+            field: 'street',
+            group: 'homeAddress'
         );
 
         $streetMaxlength100 = new ValidationRule(
@@ -94,8 +94,8 @@ class AddressValidation extends ValidationMaker
                 max: 100,
             ),
             message: 'Deve ter no máximo 100 caracteres.',
-            field: 'Rua',
-            group: 'Endereço',
+            field: 'street',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -110,8 +110,8 @@ class AddressValidation extends ValidationMaker
         $mustBeNotNull = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: 'É obrigatório.',
-            field: 'Número',
-            group: 'Endereço'
+            field: 'number',
+            group: 'homeAddress'
         );
 
         $maxlength = new ValidationRule(
@@ -119,8 +119,8 @@ class AddressValidation extends ValidationMaker
                 max: 50,
             ),            
             message: 'Deve ter no máximo 50 caracteres.',
-            field: 'Número',
-            group: 'Endereço',
+            field: 'number',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -135,8 +135,8 @@ class AddressValidation extends ValidationMaker
         $mustBeNotNull = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: 'É obrigatório.',
-            field: 'Bairro',
-            group: 'Endereço'
+            field: 'neighborhood',
+            group: 'homeAddress'
         );
 
         $maxlength = new ValidationRule(
@@ -144,8 +144,8 @@ class AddressValidation extends ValidationMaker
                 max: 50,
             ),
             message: 'Deve ter no máximo 50 caracteres.',
-            field: 'Bairro',
-            group: 'Endereço',
+            field: 'neighborhood',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -160,8 +160,8 @@ class AddressValidation extends ValidationMaker
         $mustBeNotNull = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: 'É obrigatório.',
-            field: 'Cidade',
-            group: 'Endereço'
+            field: 'city',
+            group: 'homeAddress'
         );
 
         $maxlength = new ValidationRule(
@@ -169,8 +169,8 @@ class AddressValidation extends ValidationMaker
                 max: 50,
             ),
             message: 'Deve ter no máximo 50 caracteres.',
-            field: 'Cidade',
-            group: 'Endereço',
+            field: 'city',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -185,8 +185,8 @@ class AddressValidation extends ValidationMaker
         $mustBeNotNull = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: 'É obrigatório.',
-            field: 'Estado',
-            group: 'Endereço'
+            field: 'state',
+            group: 'homeAddress'
         );
 
         $maxlength = new ValidationRule(
@@ -194,8 +194,8 @@ class AddressValidation extends ValidationMaker
                 max: 30,
             ),
             message: 'Deve ter no máximo 30 caracteres.',
-            field: 'Estado',
-            group: 'Endereço',
+            field: 'state',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -210,8 +210,8 @@ class AddressValidation extends ValidationMaker
         $mustBeNotNull = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: 'É obrigatório.',
-            field: 'País',
-            group: 'Endereço'
+            field: 'country',
+            group: 'homeAddress'
         );
 
         $maxlength = new ValidationRule(
@@ -219,8 +219,8 @@ class AddressValidation extends ValidationMaker
                 max: 30,
             ),
             message: 'Deve ter no máximo 30 caracteres.',
-            field: 'País',
-            group: 'Endereço',
+            field: 'country',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -236,8 +236,8 @@ class AddressValidation extends ValidationMaker
                 max: 100,
             ),
             message: 'Deve ter no máximo 100 caracteres.',
-            field: 'Referência',
-            group: 'Endereço',
+            field: 'reference',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -253,8 +253,8 @@ class AddressValidation extends ValidationMaker
                 max: 100,
             ),
             message: 'Deve ter no máximo 100 caracteres.',
-            field: 'Complemento',
-            group: 'Endereço',
+            field: 'complement',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 
@@ -268,8 +268,8 @@ class AddressValidation extends ValidationMaker
         $notBlanck = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: 'É obrigatório.',
-            group: 'Endereço',
-            field: 'Código Postal'
+            group: 'homeAddress',
+            field: 'zipCode'
         );
 
         $maxlength = new ValidationRule(
@@ -277,8 +277,8 @@ class AddressValidation extends ValidationMaker
                 max: 20,
             ),
             message: 'Deve ter no máximo 20 caracteres.',
-            field: 'Código Postal',
-            group: 'Endereço',
+            field: 'zipCode',
+            group: 'homeAddress',
             messageType: 'maxMessage'
         );
 

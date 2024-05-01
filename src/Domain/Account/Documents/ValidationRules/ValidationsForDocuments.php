@@ -7,6 +7,8 @@ interface ValidationsForDocuments
 {
     public function typeMatchesMyValidationType($documentType): bool;
 
+    public function type(): string;
+
     /**
      * @return ValidationRule[]
      */

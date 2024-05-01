@@ -40,9 +40,7 @@ class RegisterUserTest extends TestCase
        
 
         $this->registerUser = new RegisterUser(
-            $this->userMock,
-            $this->userRepositoryMock,
-            $this->plainTextPassword
+            $this->userRepositoryMock
         );
     }
 
@@ -75,7 +73,7 @@ class RegisterUserTest extends TestCase
         $this->userRepositoryMock->expects($this->once())
             ->method('registerNewUser');
 
-        $this->registerUser->execute();
+        $this->registerUser->execute($this->plainTextPassword, $this->userMock);
     }
 
     public function testValidationFailure()
@@ -93,7 +91,7 @@ class RegisterUserTest extends TestCase
             ->method('validate')
             ->willReturn($failureValidationResultMock);
 
-        $this->registerUser->execute();
+        $this->registerUser->execute($this->plainTextPassword, $this->userMock);
     }
 
     public function testUserEmailAlreadyRegistered()
@@ -115,7 +113,7 @@ class RegisterUserTest extends TestCase
             ->method('isEmailAlreadyRegistered')
             ->willReturn(true);
 
-        $this->registerUser->execute();
+        $this->registerUser->execute($this->plainTextPassword, $this->userMock);
     }
 
     public function testUserDocumentAlreadyRegistered()
@@ -142,6 +140,6 @@ class RegisterUserTest extends TestCase
             ->method('isDocumentAlreadyRegistered')
             ->willReturn(true);
 
-        $this->registerUser->execute();
+        $this->registerUser->execute($this->plainTextPassword, $this->userMock);
     }
 }

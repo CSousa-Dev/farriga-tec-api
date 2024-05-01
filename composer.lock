@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d06517a06a43c4424f094102a1ed9169",
+    "content-hash": "f4f21db2999516f7c47f710347862bc1",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -1575,6 +1575,53 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.0"
             },
             "time": "2021-07-14T16:46:02+00:00"
+        },
+        {
+            "name": "sousa-dev/api-docs",
+            "version": "v0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CSousa-Dev/ApiDocsMaker.git",
+                "reference": "95c8d615cbc460c74e906d868f9fe92557b635f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CSousa-Dev/ApiDocsMaker/zipball/95c8d615cbc460c74e906d868f9fe92557b635f7",
+                "reference": "95c8d615cbc460c74e906d868f9fe92557b635f7",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/yaml": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11"
+            },
+            "bin": [
+                "api-docs"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Test\\": "Test/",
+                    "DocsMaker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Renato Sousa",
+                    "email": "renatosousa@sousadev.me"
+                }
+            ],
+            "description": "Designed to assist in creating API documentation in the OpenAPI standard, this tool is built to be reusable and decoupled from your application. Leveraging PHP attribute feature, it simplifies the process of generating Swagger docs effortlessly",
+            "support": {
+                "issues": "https://github.com/CSousa-Dev/ApiDocsMaker/issues",
+                "source": "https://github.com/CSousa-Dev/ApiDocsMaker/tree/v0.0.0"
+            },
+            "time": "2024-05-01T22:41:21+00:00"
         },
         {
             "name": "symfony/cache",

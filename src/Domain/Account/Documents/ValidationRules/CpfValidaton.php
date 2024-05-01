@@ -6,9 +6,15 @@ use App\Domain\Account\Documents\ValidationRules\ValidationsForDocuments;
 
 class CpfValidaton implements ValidationsForDocuments 
 {
+    public function type(): string
+    {
+        return 'CPF';
+    }
+    
     public function __construct(private IConstraints $constraints) {}
+    
     public function typeMatchesMyValidationType($documentType): bool {
-        return strtoupper($documentType) == "CPF";
+        return strtoupper($documentType) == $this->type();
     }
 
     public function optionsToValue($options)
@@ -24,7 +30,7 @@ class CpfValidaton implements ValidationsForDocuments
         $isRequired = new ValidationRule(
             validationRule: $this->constraints->notBlanck(),
             message: "É obrigatório.",
-            field: "Documento"
+            field: "document"
         );
 
         $mustContainOnlyNumbers = new ValidationRule(
@@ -34,7 +40,7 @@ class CpfValidaton implements ValidationsForDocuments
                 }
             ),
             message: "Deve conter apenas números.",
-            field: "Documento"
+            field: "document"
         );
 
         $mustContain11Characters = new ValidationRule(
@@ -44,7 +50,7 @@ class CpfValidaton implements ValidationsForDocuments
                 }
             ),
             message: "Deve conter 11 caracteres.",
-            field: "Documento"
+            field: "document"
         );
 
         $mustNotContainAllNumbersEqual = new ValidationRule(
@@ -54,7 +60,7 @@ class CpfValidaton implements ValidationsForDocuments
                 }
             ),
             message: "Não pode conter todos os números iguais.",
-            field: "Documento"
+            field: "document"
         );
 
         $mustPassDigitRules = new ValidationRule(
@@ -64,7 +70,7 @@ class CpfValidaton implements ValidationsForDocuments
                 }
             ),
             message: "Digitos inválidos.",
-            field: "Documento"
+            field: "document"
         );
 
         

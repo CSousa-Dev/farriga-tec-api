@@ -29,7 +29,7 @@ class EmailValidation extends ValidationMaker
             new ValidationRule(
                 validationRule: $this->constraints->email(),
                 message: 'Precisa ser um e-mail válido.',
-                field: 'Email'
+                field: 'email'
             )
         ];
     }

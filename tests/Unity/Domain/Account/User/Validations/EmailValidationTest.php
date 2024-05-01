@@ -1,9 +1,9 @@
 <?php
 namespace App\Tests\Unity\Domain\Account\User\Validations;
 
-use App\Infra\SymfonyValidator;
+use App\Service\Validation\SymfonyValidator;
 use PHPUnit\Framework\TestCase;
-use App\Infra\SymfonyValidationConstraints;
+use App\Service\Validation\SymfonyValidationConstraints;
 use App\Domain\Account\User\ValidationRules\EmailValidation;
 
 class EmailValidationTest extends TestCase
@@ -21,8 +21,8 @@ class EmailValidationTest extends TestCase
         $emailAddress = 'test';
         $validationResult = $this->emailValidation->validateEmail($emailAddress);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Email', array_keys($validationResult->errors()));
-        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['Email']);
+        $this->assertContains('email', array_keys($validationResult->errors()));
+        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['email']);
     }
 
     public function testEmailWithoutAtSymbolIsInvalid()
@@ -30,8 +30,8 @@ class EmailValidationTest extends TestCase
         $emailAddress = 'test.com';
         $validationResult = $this->emailValidation->validateEmail($emailAddress);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Email', array_keys($validationResult->errors()));
-        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['Email']);
+        $this->assertContains('email', array_keys($validationResult->errors()));
+        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['email']);
     }
 
     public function testEmailWithoutDotSomethingIsInvalid()
@@ -39,8 +39,8 @@ class EmailValidationTest extends TestCase
         $emailAddress = 'test@test';
         $validationResult = $this->emailValidation->validateEmail($emailAddress);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Email', array_keys($validationResult->errors()));
-        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['Email']);
+        $this->assertContains('email', array_keys($validationResult->errors()));
+        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['email']);
     }
 
     public function testEmailWithoutPrefixIsInvalid()
@@ -48,8 +48,8 @@ class EmailValidationTest extends TestCase
         $emailAddress = '@test.com';
         $validationResult = $this->emailValidation->validateEmail($emailAddress);
         $this->assertTrue($validationResult->hasErrors());
-        $this->assertContains('Email', array_keys($validationResult->errors()));
-        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['Email']);
+        $this->assertContains('email', array_keys($validationResult->errors()));
+        $this->assertContains('Precisa ser um e-mail válido.', $validationResult->errors()['email']);
     }
 
     public function testValidEmail()

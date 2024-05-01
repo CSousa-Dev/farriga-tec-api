@@ -1,8 +1,7 @@
 <?php 
-namespace App\Infra;
+namespace App\Service\Validation;
 use App\Domain\Validations\IConstraints;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextFactory;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SymfonyValidationConstraints implements IConstraints
@@ -97,6 +96,11 @@ class SymfonyValidationConstraints implements IConstraints
             pattern: $pattern,
             match: $match,
         );
+    }
+
+    public function isTrue()
+    {
+        return new Assert\IsTrue();
     }
 }
 

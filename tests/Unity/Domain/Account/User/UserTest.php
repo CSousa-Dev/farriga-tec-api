@@ -6,6 +6,7 @@ use App\Domain\Account\User\User;
 use App\Domain\Account\User\Email;
 use App\Domain\Account\User\Address;
 use App\Domain\Account\Documents\Cpf;
+use App\Domain\Account\Documents\Document;
 use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 
@@ -15,7 +16,7 @@ class UserTest extends TestCase
     {
         // Mock dependencies
         $emailMock          = $this->createMock(Email::class);
-        $documentMock       = $this->createMock(Cpf::class);
+        $documentMock       = $this->createMock(Document::class);
         $addressMock        = $this->createMock(Address::class);
         $userValidationMock = $this->createMock(UserValidation::class);
 
