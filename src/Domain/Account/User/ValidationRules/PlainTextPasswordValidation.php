@@ -197,7 +197,7 @@ class PlainTextPasswordValidation extends ValidationMaker
 
         $matches = [];
         foreach ($sequences as $sequence) {
-            if (strpos($password, $sequence) !== false) {
+            if (strpos(strtoupper($password), strtoupper($sequence)) !== false) {
                 $matches[] = $sequence;
             }
         }
