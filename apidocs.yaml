@@ -1,4 +1,84 @@
-tags: {  }
-paths: {  }
+tags:
+  -
+    name: Account
+    description: 'This resource is responsible for account management. Possibility to: register a new account, change password, update account information, etc.'
+paths:
+  /account:
+    post:
+      tags:
+        - Account
+      summary: 'Register a new account'
+      description: 'This is the first step to create a new account, here you will register the account information.'
+      requestBody:
+        description: 'The account information to be registered.'
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: 'Account registered successfully.'
 components:
-  schemas: {  }
+  schemas:
+    Address:
+      description: 'Home Address DTO'
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        neighborhood:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zipCode:
+          type: string
+        complement:
+          type: string
+        reference:
+          type: string
+    Document:
+      description: 'Document with contains document number and type. Ex: RG, CPF, CNH, etc. Obs: for now, the document type available is only CPF.'
+      properties:
+        number:
+          type: string
+          description: 'The document number. Ex: 12345678900'
+          required: true
+        type:
+          type: string
+          enum:
+            - CPF
+          description: 'The document type for validate the document number. For now only CPF is available.'
+          required: true
+    User:
+      description: 'User DTO'
+      properties:
+        firstName:
+          type: string
+          description: 'The user first name'
+          required: true
+        lastName:
+          type: string
+          description: 'The user last name'
+          required: true
+        email:
+          type: string
+          description: 'The user email'
+          required: true
+        birthDate:
+          type: string
+          format: YYYY-mm-dd
+          description: 'The user birth date'
+          required: true
+        plainPassword:
+          type: string
+          description: 'The user plain password, check /constraints/password for information about the password rules'
+          required: true
+        documentDTO:
+          $ref: '#/components/schemas/Document'
+        addressDTO:
+          $ref: '#/components/schemas/Address'

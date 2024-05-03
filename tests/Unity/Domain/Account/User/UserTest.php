@@ -37,7 +37,6 @@ class UserTest extends TestCase
  
          // Create User instance with mock dependencies
         $user = new User(
-            '123',
             'John',
             'Doe',
             $documentMock,

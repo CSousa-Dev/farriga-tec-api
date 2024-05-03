@@ -14,7 +14,7 @@ class PlainTextPassword extends Validable
     private ?DateTime $ownerBirthDate = null;
 
     public function __construct(
-        public readonly string $password,
+        private string $password,
         private PlainTextPasswordValidation $plainTextValidationRules)
     {
     }
@@ -28,6 +28,11 @@ class PlainTextPassword extends Validable
         $this->ownerFirstName = $ownerFirstName;
         $this->ownerLastName  = $ownerLastName;
         $this->ownerBirthDate = $ownerBirthDate;
+    }
+
+    public function password()
+    {
+        return $this->password;
     }
 
     public function validate(): ValidationResult

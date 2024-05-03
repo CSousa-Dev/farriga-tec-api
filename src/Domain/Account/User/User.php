@@ -14,21 +14,20 @@ use SecurityInfo;
 
 class User extends Validable {
 
-    private Address $address;
-
     public function __construct(
-        public readonly ?string $id, 
-        private string $firstName,
-        private string $lastName,
-        private Document $document,
-        private UserValidation $userValidation,
-        private DateTime $birthDate,
-        private Email $email,
-        private readonly ?SecurityInfo $securityInfo = null
+        private             string $firstName,
+        private             string $lastName,
+        private             Document $document,
+        private             UserValidation $userValidation,
+        private             DateTime $birthDate,
+        private             Email $email,
+        private readonly    ?SecurityInfo $securityInfo = null,
+        private             ?Address $address = null,
+        public  readonly    ?string $id = null, 
     )
     {}
     
-    public function homeAddress(): Address
+    public function homeAddress(): ?Address
     {
         return $this->address;
     }
@@ -98,7 +97,9 @@ class User extends Validable {
         $userValidationResult = $this->userValidation->validateFromUser($this);
         $userValidationResult->addAnotherValidationResult($this->email->validate());
         $userValidationResult->addAnotherValidationResult($this->document->validate());
-        $userValidationResult->addAnotherValidationResult($this->address->validate());
+
+        if(!is_null($this->address))
+            $userValidationResult->addAnotherValidationResult($this->address->validate());
 
         return $userValidationResult;
     }

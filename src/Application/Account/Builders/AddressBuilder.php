@@ -9,14 +9,14 @@ class AddressBuilder
 {
     private string $street;
     private string $number;
-    private string $complement;
     private string $neighborhood;
     private string $city;
     private string $state;
-    private string $reference;
     private string $country;
     private string $zipCode;
-
+    private ?string $complement = null;
+    private ?string $reference = null;
+    
     public function __construct(
         private AddressValidation $addressValidation
     ){}
@@ -103,5 +103,21 @@ class AddressBuilder
         $this->zipCode          = $addressDto->zipCode;
         $this->reference        = $addressDto->reference;
         return $this;
+    }
+
+    public function isReady()
+    {
+        if(
+            empty($this->street) ||
+            empty($this->number) ||
+            empty($this->neighborhood) ||
+            empty($this->city) ||
+            empty($this->state) ||
+            empty($this->country) ||
+            empty($this->zipCode)
+        )
+            return false;
+            
+        return true;
     }
 }

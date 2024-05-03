@@ -9,9 +9,6 @@ use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationRule;
 use App\Domain\Validations\ValidationMaker;
 use App\Domain\Validations\ValidationResult;
-use App\Domain\Account\Documents\ValidationRules\DocumentValidation;
-use App\Domain\Account\User\ValidationRules\PlainTextPasswordValidation;
-use App\Tests\Unity\Account\User\Validations\PlainPasswordValidationTest;
 
 class UserValidation extends ValidationMaker
 {

@@ -2,3 +2,6 @@ Adicionar mensagem de erro quando não encontrar arquivo de configuração na ra
 Adicionar arquivo de configuração de exemplo na raiz do projeto de quem o baixou
 Quando não existir nenhuma classe que implemente as funcionanlidades, retornar uma mensagem dizendo que 
 ainda não foram localizadas atributos setados
+De componentProp remover type enum
+
+adicionar referencias nas object props do mesmo modo que existe quando vou criar um schema

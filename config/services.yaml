@@ -8,6 +8,8 @@ parameters:
 services:
     App\Domain\Validations\Validator: '@App\Service\Validation\SymfonyValidator'
 
+    App\Domain\Validations\IConstraints: '@App\Service\Validation\SymfonyConstraints'
+
     App\Domain\Account\Documents\ValidationRules\DocumentValidation: 
         arguments:
             $validationsForDocuments: 

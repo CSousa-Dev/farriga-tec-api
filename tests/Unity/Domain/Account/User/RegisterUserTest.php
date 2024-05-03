@@ -13,7 +13,9 @@ use App\Domain\Account\User\ValidationRules\EmailValidation;
 use App\Domain\Account\Services\RegisterUser\UserEmailAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\UserDocumentAlreadyRegisteredException;
 use App\Domain\Account\Services\RegisterUser\RegisterUserViolateValidationConstraintException;
+use App\Domain\Account\User\IPasswordHasher;
 use App\Domain\Account\User\PlainTextPassword;
+use App\Service\SymfonyPasswordHasher;
 
 class RegisterUserTest extends TestCase
 {
@@ -24,23 +26,35 @@ class RegisterUserTest extends TestCase
 
     private $emailMock;
 
+    private $passwordHasherMock;
+
     protected function setUp(): void
     {
         $this->userRepositoryMock = $this->createMock(UserRepository::class);
         $this->plainTextPassword = $this->createMock(PlainTextPassword::class);
+        $this->plainTextPassword
+            ->method('password')
+            ->willReturn('plain_password');
+
         $this->userMock = $this->createMock(User::class);
         $this->emailMock = $this->getMockBuilder(Email::class)
                      ->setConstructorArgs(['test@test.com', $this->createMock(EmailValidation::class)])
                      ->getMock();
-                     
+
+        $this->passwordHasherMock = $this->createMock(SymfonyPasswordHasher::class);
+        $this->passwordHasherMock
+            ->method('hash')
+            ->willReturn('hashed_password');
+          
 
         $this->userMock->expects($this->any())
             ->method('email')
             ->willReturn($this->emailMock);
-       
+    
 
         $this->registerUser = new RegisterUser(
-            $this->userRepositoryMock
+            $this->userRepositoryMock,
+            $this->passwordHasherMock
         );
     }
 

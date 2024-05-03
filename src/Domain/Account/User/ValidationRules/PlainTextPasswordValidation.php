@@ -20,13 +20,15 @@ class PlainTextPasswordValidation extends ValidationMaker
         $this->validator = $validator;
     }
 
-    public function validatePassword(string $password, $firstName = null, $lastName = null, DateTime $birthDate = new DateTime('now')): ValidationResult
+    public function validatePassword(string $password, $firstName = null, $lastName = null, ?DateTime $birthDate = new DateTime('now')): ValidationResult
     {
         return $this->validator->validate($this->foreachRuleSetValue($password, ...$this->passwordSecurityRules($firstName, $lastName, $birthDate)));
     }
 
-    private function passwordSecurityRules($firstName = null, $lastName = null, DateTime $birthDate = new DateTime()): array
+    private function passwordSecurityRules($firstName = null, $lastName = null, ?DateTime $birthDate = new DateTime()): array
     {
+        if($birthDate === null) $birthDate = new DateTime('now');
+
         $especialChar = new ValidationRule(
             validationRule: $this->constraints->callback(
                 function ($password) {

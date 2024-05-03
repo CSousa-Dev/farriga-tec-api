@@ -1,7 +1,14 @@
 <?php 
 namespace App\Application\Account\Builders;
 
+use DateTime;
+use App\Domain\Account\User\User;
+use App\Domain\Account\User\Email;
+use App\Domain\Account\User\Address;
+use App\Domain\Account\Documents\Document;
+use App\Application\Account\DTOs\AddressDTO;
 use App\Application\Account\Builders\AddressBuilder;
+use App\Application\Account\DTOs\RegisterAccountDTO;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 use App\Domain\Account\User\ValidationRules\EmailValidation;
 use App\Domain\Account\Documents\ValidationRules\DocumentValidation;
@@ -9,9 +16,10 @@ use App\Domain\Account\User\ValidationRules\PlainTextPasswordValidation;
 
 class UserBuilder 
 {
+    private ?string $id = null;
     private string $firstName;
     private string $lastName;
-    private string $birthDate;
+    private DateTime $birthDate;
     private string $email;
     private string $plainPassword;
     private string $documentNumber;
@@ -45,7 +53,7 @@ class UserBuilder
 
     public function withBirthDate($birthDate): UserBuilder
     {
-        $this->birthDate = $birthDate;
+        $this->birthDate = new DateTime($birthDate);
         return $this;
     }
 
@@ -67,25 +75,67 @@ class UserBuilder
         return $this;
     }
 
-    public function addressBuilder(): AddressBuilder
-    {     
-        return $this->addressBuilder;
+    public function withAddress(AddressDTO $addressDto): UserBuilder
+    {    
+        $this->addressBuilder->withCity($addressDto->city)
+            ->withComplement($addressDto->complement)
+            ->withCountry($addressDto->country)
+            ->withNeighborhood($addressDto->neighborhood)
+            ->withNumber($addressDto->number)
+            ->withState($addressDto->state)
+            ->withStreet($addressDto->street)
+            ->withZipCode($addressDto->zipCode);
+    
+        return $this;
     }
 
-    // public function fromUserDto(UserDTO $userDTO): UserBuilder
-    // {
-    //     $this->withEmail($userDTO->email);
-    //     $this->withFirstName($userDTO->firstName);
-    //     $this->withLastName($userDTO->lastName);
-    //     $this->withBirthDate($userDTO->birthDate);
-    //     $this->withPlainPassword($userDTO->plainPassword);
-    //     $this->withDocumentNumber($userDTO->documentNumber);
-    //     $this->withDocumentType($userDTO->documentType);
-    //     return $this;
-    // }
+    public function fromRegisterAccountDto(RegisterAccountDTO $registerAccountDto): UserBuilder
+    {
+        $this->withFirstName($registerAccountDto->firstName)
+            ->withLastName($registerAccountDto->lastName)
+            ->withEmail($registerAccountDto->email)
+            ->withPlainPassword($registerAccountDto->plainPassword)
+            ->withBirthDate($registerAccountDto->birthDate)
+            ->withDocumentNumber($registerAccountDto->document->number)
+            ->withDocumentType($registerAccountDto->document->type);
+
+        if($registerAccountDto->addressDTO instanceof AddressDTO)
+            $this->withAddress($registerAccountDto->addressDTO);
+       
+        return $this;
+    }
+
+    public function build(): User
+    {
+        if($this->addressBuilder->isReady())
+            return new User(
+                id: $this->id,
+                firstName: $this->firstName,
+                lastName: $this->lastName,
+                document: new Document(
+                    $this->documentValidation,
+                    $this->documentNumber,
+                    $this->documentType
+                ),
+                userValidation: $this->userValidation,
+                birthDate: $this->birthDate,
+                email: new Email($this->email, $this->emailValidation),
+                address: $this->addressBuilder->build()
+        );
 
 
-
-
-
+        return new User(
+            id: $this->id,
+            firstName: $this->firstName,
+            lastName: $this->lastName,
+            document: new Document(
+                $this->documentValidation,
+                $this->documentNumber,
+                $this->documentType
+            ),
+            userValidation: $this->userValidation,
+            birthDate: $this->birthDate,
+            email: new Email($this->email, $this->emailValidation)
+        );
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Application\Account\RegisterAccount;
 
+use DateTime;
 use App\Application\InvalidInputException;
 use App\Domain\Validations\ValidationResult;
 use App\Application\Account\DTOs\RegisterAccountDTO;
@@ -55,7 +56,7 @@ class ValidateRegisterInputs
 
     private function validateDocument(RegisterAccountDto $registerAccountDTO)
     {
-        $this->validationResult->addAnotherValidationResult($this->documentValidation->validate($registerAccountDTO->document->documentType, $registerAccountDTO->document->documentNumber));
+        $this->validationResult->addAnotherValidationResult($this->documentValidation->validate($registerAccountDTO->document->type, $registerAccountDTO->document->number));
     }
 
     private function validateAddress(RegisterAccountDto $registerAccountDTO)
@@ -76,6 +77,12 @@ class ValidateRegisterInputs
 
     private function validatePlainTextPassword(RegisterAccountDto $registerAccountDTO)
     {
-        $this->validationResult->addAnotherValidationResult($this->plainTextPasswordValidation->validatePassword($registerAccountDTO->plainPassword));
+        $this->validationResult->addAnotherValidationResult($this->plainTextPasswordValidation->validatePassword(
+                password: $registerAccountDTO->plainPassword,
+                firstName : $registerAccountDTO->firstName,
+                lastName : $registerAccountDTO->lastName,
+                birthDate : new DateTime($registerAccountDTO->birthDate)
+            )
+        );
     }
 }
