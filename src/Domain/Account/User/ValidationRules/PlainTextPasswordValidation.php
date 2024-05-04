@@ -25,6 +25,23 @@ class PlainTextPasswordValidation extends ValidationMaker
         return $this->validator->validate($this->foreachRuleSetValue($password, ...$this->passwordSecurityRules($firstName, $lastName, $birthDate)));
     }
 
+    public function validateConfirmation(string $password, string $confirmPassword): ValidationResult
+    {
+        $isEqual = $password === $confirmPassword;
+        return $this->validator->validate($this->foreachRuleSetValue($this->confirmationPasswordRules()->setValue($isEqual)));
+    }
+
+    private function confirmationPasswordRules(): ValidationRule
+    {
+        $confirmationPassword = new ValidationRule(
+            validationRule: $this->constraints->isTrue(),
+            field: 'password',
+            message: 'As senhas não conferem.'
+        );
+        
+        return $confirmationPassword;
+    }
+
     private function passwordSecurityRules($firstName = null, $lastName = null, ?DateTime $birthDate = new DateTime()): array
     {
         if($birthDate === null) $birthDate = new DateTime('now');
@@ -214,6 +231,7 @@ class PlainTextPasswordValidation extends ValidationMaker
     private static function hasUpperCaseLetter($password) {
         return preg_match('/[A-Z]/', $password);
     }
+
     
     private static function checkPasswordContainADate($password, DateTime $date)
     {

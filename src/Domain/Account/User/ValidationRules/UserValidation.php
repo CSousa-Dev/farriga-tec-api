@@ -177,9 +177,16 @@ class UserValidation extends ValidationMaker
             message: 'Deve ser uma data em formato válido.'
         );
 
+        $isRequired = new ValidationRule(
+            validationRule: $this->constraints->notBlanck(),
+            message: 'É obrigatória.',
+            field: 'birthDate'
+        );
+
         return [
             $birthDateCannotBeEmpty,
-            $birthDateMustBeValidDate
+            $birthDateMustBeValidDate,
+            $isRequired 
         ];
     }
 

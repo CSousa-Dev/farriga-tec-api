@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Application\Account\DTOs\RegisterAccountDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Application\Account\RegisterAccount\RegisterAccountService;
-use DocsMaker\Attributes\ApiResource;
 
 class ChangeUserPasswordController extends AbstractController
 {

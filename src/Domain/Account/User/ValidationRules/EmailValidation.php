@@ -30,6 +30,11 @@ class EmailValidation extends ValidationMaker
                 validationRule: $this->constraints->email(),
                 message: 'Precisa ser um e-mail válido.',
                 field: 'email'
+            ),
+            new ValidationRule(
+                validationRule: $this->constraints->notBlanck(),
+                message: 'É obrigatório.',
+                field: 'email'
             )
         ];
     }
