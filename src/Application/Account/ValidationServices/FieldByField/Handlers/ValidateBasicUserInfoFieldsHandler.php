@@ -6,6 +6,7 @@ use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\ValidationRules\UserValidation;
 use App\Domain\Account\Documents\ValidationRules\DocumentValidation;
 use App\Application\Account\ValidationServices\FieldByField\AbstractValidateFieldsHandler;
+use App\Domain\Account\Repository\UserRepository;
 
 class ValidateBasicUserInfoFieldsHandler extends AbstractValidateFieldsHandler
 {
@@ -29,7 +30,8 @@ class ValidateBasicUserInfoFieldsHandler extends AbstractValidateFieldsHandler
     public function __construct(
         private UserValidation $userValidation,
         private DocumentValidation $documentValidation,
-        private EmailValidation $emailValidation
+        private EmailValidation $emailValidation,
+        private UserRepository $userRepository
     )
     {}
 
@@ -82,6 +84,11 @@ class ValidateBasicUserInfoFieldsHandler extends AbstractValidateFieldsHandler
 
     private function validateEmail(?string $email = ''): ValidationResult
     {
-        return $this->emailValidation->validateEmail($email);
+        $validationResult = $this->emailValidation->validateEmail($email);
+        if($this->userRepository->isEmailAlreadyRegistered($email)){
+            $validationResult->addError('email', 'Este e-mail já está cadastrado, faça o login ou recupere sua senha.');
+        };
+
+        return $validationResult;
     }
 }
