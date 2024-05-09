@@ -15,12 +15,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use App\Domain\Account\Repository\UserRepository as UserRepositoryInterface;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @extends ServiceEntityRepository<EntityUser>
  *
- * @method User|null find($id, $lockMode = null, $lockVersion = null)
- * @method User|null findOneBy(array $criteria, array $orderBy = null)
- * @method User[]    findAll()
- * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method EntityUser|null find($id, $lockMode = null, $lockVersion = null)
+ * @method EntityUser|null findOneBy(array $criteria, array $orderBy = null)
+ * @method EntityUser[]    findAll()
+ * @method EntityUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
@@ -32,7 +32,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         private DocumentTypeRepository $documentTypeRepository
     )
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, EntityUser::class);
     }
 
     public function isEmailAlreadyRegistered(User | string $emailOrUser): bool
@@ -65,8 +65,8 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         $entityUser = $this->createFromDomainUser($user);
         $entityUser->setSecurityInfo($securityUser);
 
-        $this->userSecurityInfoRepository->persist($entityUser);
-        $this->userSecurityInfoRepository->flush();
+        $this->getEntityManager()->persist($entityUser);
+        $this->getEntityManager()->flush();
     }
 
     public function createFromDomainUser(User $domainUser)
@@ -78,7 +78,9 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         $entityUser->setBirthDate(new DateTimeImmutable($domainUser->birthDate()));
         $entityUser->setDocument($domainUser->document()->number());
         $entityUser->setEmail($this->emailRepository->createFromDomainEmail($domainUser->email()));
-        $entityUser->setDocumentType($this->documentTypeRepository->find(strtoupper($domainUser->document()->type())));
+        $entityUser->setDocumentType($this->documentTypeRepository->findOneBy(
+            ["type" => strtoupper($domainUser->document()->type())]
+        ));
 
         if(!is_null($domainUser->homeAddress())){
             $address = $this->addressRepository->createAddressFromDomainAddress($domainUser->homeAddress());
