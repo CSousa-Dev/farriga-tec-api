@@ -23,10 +23,10 @@ class Email
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $validationCode = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $validationCodeCreatedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $validationCodeSentAt = null;
 
     public function getId(): ?int
@@ -45,7 +45,6 @@ class Email
 
         return $this;
     }
-
 
     public function getValidatedAt(): ?\DateTimeImmutable
     {
