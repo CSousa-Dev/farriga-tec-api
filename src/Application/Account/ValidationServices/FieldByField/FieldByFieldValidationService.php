@@ -17,7 +17,7 @@ class FieldByFieldValidationService
     )
     {
         $this->handler = $validateFieldsBasicUserInfoHandler;
-        $this->handler->setNextHandler($validatePlainPasswordFieldsHandler->setNextHandler($validateAddressFieldsHandler));
+        $this->handler->setNextHandler($validateAddressFieldsHandler->setNextHandler($validatePlainPasswordFieldsHandler));
     }
 
     public function execute(string $serviceName, array $fields): ValidationResult | null

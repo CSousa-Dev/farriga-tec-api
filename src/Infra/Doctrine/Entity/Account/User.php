@@ -6,9 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Infra\Doctrine\Entity\Account\Email;
 use App\Infra\Doctrine\Entity\UserSecurityInfo;
 use App\Domain\Account\Repository\UserRepository;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`account.user`')]
+#[ORM\Table(name: 'account.user')]
 class User
 {
     #[ORM\Id]
@@ -21,6 +22,9 @@ class User
 
     #[ORM\Column(length: 55)]
     private ?string $lastName = null;
+    
+    #[ORM\Column()]
+    private ?DateTimeImmutable $birthDate = null;
 
     #[ORM\Column(length: 55)]
     private ?string $document = null;
@@ -125,6 +129,18 @@ class User
     public function setAddress(Address $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?DateTimeImmutable
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(DateTimeImmutable $birthDate): static
+    {
+        $this->birthDate = $birthDate;
 
         return $this;
     }

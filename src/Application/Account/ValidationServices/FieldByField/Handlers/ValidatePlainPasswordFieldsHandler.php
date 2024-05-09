@@ -5,7 +5,6 @@ namespace App\Application\Account\ValidationServices\FieldByField\Handlers;
 use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\ValidationRules\PlainTextPasswordValidation;
 use App\Application\Account\ValidationServices\FieldByField\AbstractValidateFieldsHandler;
-use App\Application\Account\ValidationServices\FieldByField\ValidateBasicUserInfoFieldsHandler;
 
 class ValidatePlainPasswordFieldsHandler extends AbstractValidateFieldsHandler
 {

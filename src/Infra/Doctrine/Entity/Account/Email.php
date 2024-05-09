@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Infra\Doctrine\Repository\Account\EmailRepository;
 
 #[ORM\Entity(repositoryClass: EmailRepository::class)]
-#[ORM\Table(name: '`account.email`')]
+#[ORM\Table(name: 'account.email')]
 class Email
 {
     #[ORM\Id]

@@ -22,7 +22,7 @@ class ValidateAddressFieldsHandler extends AbstractValidateFieldsHandler
             'city',
             'state',
             'country',
-            'zip_code',
+            'zipCode',
             'reference'
         ];
     }
@@ -64,8 +64,8 @@ class ValidateAddressFieldsHandler extends AbstractValidateFieldsHandler
             $validationResult->addAnotherValidationResult($this->validateCountry($fields['country']));
         }
 
-        if(isset($fields['zip_code'])) {
-            $validationResult->addAnotherValidationResult($this->validateZipCode($fields['zip_code']));
+        if(isset($fields['zipCode'])) {
+            $validationResult->addAnotherValidationResult($this->validateZipCode($fields['zipCode']));
         }
 
         if(isset($fields['reference'])) {

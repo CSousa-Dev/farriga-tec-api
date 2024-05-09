@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Infra\Doctrine\Repository\Account\DocumentTypeRepository;
 
 #[ORM\Entity(repositoryClass: DocumentTypeRepository::class)]
-#[ORM\Table(name: '`account.document_type`')]
+#[ORM\Table(name: 'account.document_type')]
 class DocumentType
 {
     #[ORM\Id]

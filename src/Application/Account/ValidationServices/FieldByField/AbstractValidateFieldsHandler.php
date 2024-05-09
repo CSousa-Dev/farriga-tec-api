@@ -15,7 +15,7 @@ abstract class AbstractValidateFieldsHandler
     public function setNextHandler(AbstractValidateFieldsHandler $handler): AbstractValidateFieldsHandler
     {
         $this->nextHandler = $handler;
-        return $this->nextHandler;
+        return $this;
     }
 
     public function handle(string $serviceName, array $fields): ValidationResult 
@@ -25,7 +25,7 @@ abstract class AbstractValidateFieldsHandler
             return $this->exec($fields);
         } 
 
-        if(!$this->canHandle($serviceName) && $this->nextHandler === null) throw new InvalidValidationServiceNameException($serviceName);
+        if(!$this->canHandle($serviceName) && $this->nextHandler === null) throw new InvalidValidationServiceNameException($serviceName, $this->serviceName());
         
         return $this->nextHandler->handle($serviceName, $fields);
     }

@@ -4,6 +4,7 @@ namespace App\Infra\Doctrine\Repository\Account;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Infra\Doctrine\Entity\Account\Email;
+use App\Domain\Account\User\Email as DomainEmail;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -20,6 +21,15 @@ class EmailRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Email::class);
     }
+
+    public function createFromDomainEmail(DomainEmail $domainEmail)
+    {
+        $entityEmail = new Email();
+        $entityEmail->setAddress($domainEmail->address);
+        return $entityEmail;
+    }
+
+    
 
 //    /**
 //     * @return Email[] Returns an array of Email objects

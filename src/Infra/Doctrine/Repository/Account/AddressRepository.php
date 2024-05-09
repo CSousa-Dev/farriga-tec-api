@@ -4,6 +4,7 @@ namespace App\Infra\Doctrine\Repository\Account;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Infra\Doctrine\Entity\Account\Address;
+use App\Domain\Account\User\Address as DomainAddress;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -19,6 +20,21 @@ class AddressRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Address::class);
+    }
+
+    public function createAddressFromDomainAddress(DomainAddress $address)
+    {
+        $entityAddress = new Address();
+        $entityAddress->setStreet($address->street);
+        $entityAddress->setNumber($address->number);
+        $entityAddress->setNeighborhood($address->neighborhood);
+        $entityAddress->setCity($address->city);
+        $entityAddress->setState($address->state);
+        $entityAddress->setCountry($address->country);
+        $entityAddress->setZipCode($address->zipCode);
+        $entityAddress->setReference($address->reference);
+        $entityAddress->setComplement($address->complement);
+        return $entityAddress;
     }
 
 //    /**
