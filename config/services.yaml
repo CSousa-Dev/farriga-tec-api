@@ -32,6 +32,9 @@ services:
     App\EventListener\InvalidInputExceptionListener:
         tags: ['kernel.event_listener']
 
+    App\EventListener\RegisterAccount\UserEmailAlreadyRegisteredExceptionListener:
+        tags: ['kernel.event_listener']
+
 
 
     # add more service definitions when explicit configuration is needed

@@ -21,6 +21,6 @@ class UserEmailAlreadyRegisteredException Extends DomainException
 
     public function defaultCode(): int
     {
-        return 400;
+        return 409;
     }
 }
