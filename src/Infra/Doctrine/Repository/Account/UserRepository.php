@@ -5,12 +5,12 @@ namespace App\Infra\Doctrine\Repository\Account;
 use DateTimeImmutable;
 use App\Domain\Account\User\User;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Infra\Doctrine\Entity\UserSecurityInfo;
+use App\Infra\Doctrine\Entity\Security\UserSecurityInfo;
 use App\Infra\Doctrine\Entity\Account\User as EntityUser;
 use App\Infra\Doctrine\Repository\Account\EmailRepository;
 use App\Infra\Doctrine\Repository\Account\AddressRepository;
-use App\Infra\Doctrine\Repository\UserSecurityInfoRepository;
 use App\Infra\Doctrine\Repository\Account\DocumentTypeRepository;
+use App\Infra\Doctrine\Repository\Security\UserSecurityInfoRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use App\Domain\Account\Repository\UserRepository as UserRepositoryInterface;
 

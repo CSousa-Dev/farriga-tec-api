@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Infra\Doctrine\Entity;
+namespace App\Infra\Doctrine\Entity\Security;
 
+use App\Infra\Doctrine\Entity\Account\User;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use App\Infra\Doctrine\Entity\Security\ApiToken;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Infra\Doctrine\Repository\UserSecurityInfoRepository;
+use App\Infra\Doctrine\Repository\Security\UserSecurityInfoRepository;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserSecurityInfoRepository::class)]
@@ -24,6 +28,22 @@ class UserSecurityInfo implements UserInterface, PasswordAuthenticatedUserInterf
 
     #[ORM\Column(type: 'string')]
     private string $password;
+
+    /**
+     * @var Collection<int, ApiToken>
+     */
+    #[ORM\OneToMany(targetEntity: ApiToken::class, mappedBy: 'ownedBy', cascade: ["persist"])]
+    private Collection $apiToken;
+
+   
+
+    #[ORM\OneToOne(targetEntity: User::class, mappedBy: 'securityInfo', cascade: ["persist"])]
+    private User $domainUser;
+
+    public function __construct()
+    {
+        $this->apiToken = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,5 +113,42 @@ class UserSecurityInfo implements UserInterface, PasswordAuthenticatedUserInterf
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, ApiToken>
+     */
+    public function getApiToken(): Collection
+    {
+        return $this->apiToken;
+    }
+
+    public function addApiToken(ApiToken $apiToken): static
+    {
+        if (!$this->apiToken->contains($apiToken)) {
+            $this->apiToken->add($apiToken);
+            $apiToken->setOwnedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApiToken(ApiToken $apiToken): static
+    {
+        if ($this->apiToken->removeElement($apiToken)) {
+            // set the owning side to null (unless already changed)
+            if ($apiToken->getOwnedBy() === $this) {
+                $apiToken->setOwnedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+    public function getDomainUser(): User
+    {
+        return $this->domainUser;
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Infra\Doctrine\Entity\Account;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Infra\Doctrine\Entity\Account\Email;
-use App\Infra\Doctrine\Entity\UserSecurityInfo;
 use App\Domain\Account\Repository\UserRepository;
-use DateTimeImmutable;
+use App\Infra\Doctrine\Entity\Security\UserSecurityInfo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'account.user')]

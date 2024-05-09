@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Infra\Doctrine\Repository;
+namespace App\Infra\Doctrine\Repository\Security;
 
 use Doctrine\Persistence\ManagerRegistry;
-use App\Infra\Doctrine\Entity\UserSecurityInfo;
+use App\Infra\Doctrine\Entity\Security\ApiToken;
+use App\Infra\Doctrine\Entity\Security\UserSecurityInfo;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -36,6 +37,14 @@ class UserSecurityInfoRepository extends ServiceEntityRepository implements Pass
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function addApiToken(UserSecurityInfo $userSecurityInfo, ApiToken $apiToken): UserSecurityInfo
+    {
+        $userSecurityInfo->addApiToken($apiToken);
+        $this->getEntityManager()->persist($userSecurityInfo);
+        $this->getEntityManager()->flush();
+        return $userSecurityInfo;
     }
 
 //    /**
