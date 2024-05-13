@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Domain\Account\Repository\UserRepository;
+use App\Application\NotConfirmedEmailException;
 use App\Infra\Doctrine\Entity\Security\ApiToken;
 use App\Infra\Doctrine\Repository\Account\UserRepository as AccountUserRepository;
 use App\Infra\Doctrine\Repository\Security\ApiTokenRepository;
@@ -22,7 +22,6 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
     {
         // e.g. query the "access token" database to search for this token
 
-
         /**
          * @var ApiToken|null $accessToken
          */
@@ -32,17 +31,17 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
             throw new BadCredentialsException('Invalid credentials.');
         }
 
-        $owner = $accessToken->getOwnedBy();
+        // $owner = $accessToken->getOwnedBy();
 
-        $domainUser = $owner->getDomainUser();
+        // $domainUser = $owner->getDomainUser();
 
-        if($domainUser->getEmail()->getValidatedAt() === null) {
-            throw new BadCredentialsException('Email not validated.', 401);
-        }
+        // if($domainUser->getEmail()->getValidatedAt() === null) {
+        //     throw new NotConfirmedEmailException(token: $accessToken->getToken());
+        // }
         
         // and return a UserBadge object containing the user identifier from the found token
         // (this is the same identifier used in Security configuration; it can be an email,
         // a UUUID, a username, a database ID, etc.)
-        return new UserBadge($owner->getUserIdentifier());
+        return new UserBadge($accessToken->getOwnedBy()->getUserIdentifier());
     }
 }
