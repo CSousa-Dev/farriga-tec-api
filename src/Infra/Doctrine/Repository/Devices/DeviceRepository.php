@@ -2,9 +2,9 @@
 
 namespace App\Infra\Doctrine\Repository\Devices;
 
-use App\Entity\Device;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Domain\Devices\Device;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Device>

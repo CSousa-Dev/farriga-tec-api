@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Entity;
+namespace App\Infra\Doctrine\Entity\Devices;
 
-use App\Infra\Doctrine\Entity\Account\User;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\DeviceRepository;
+use App\Infra\Doctrine\Entity\Account\User;
 use Doctrine\Common\Collections\Collection;
+use App\Infra\Doctrine\Entity\Devices\Sensor;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Infra\Doctrine\Repository\Devices\DeviceRepository;
 
 #[ORM\Entity(repositoryClass: DeviceRepository::class)]
 #[Table(name: 'devices.device')]

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Infra\Doctrine\Entity\Devices;
 
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\SensorRepository;
+use App\Infra\Doctrine\Repository\Devices\SensorRepository;
 
 #[ORM\Entity(repositoryClass: SensorRepository::class)]
 #[Table(name: 'devices.device')]

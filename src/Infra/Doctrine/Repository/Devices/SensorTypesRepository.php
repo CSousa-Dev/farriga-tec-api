@@ -2,9 +2,9 @@
 
 namespace App\Infra\Doctrine\Repository\Devices;
 
-use App\Entity\SensorTypes;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Infra\Doctrine\Entity\Devices\SensorTypes;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<SensorTypes>
