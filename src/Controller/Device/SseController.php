@@ -18,6 +18,7 @@ class SseController extends AbstractController
         header('Cache-Control: no-cache');
         header('X-Accel-Buffering: no');
         header('Connection: keep-alive');
+        set_time_limit(0);
 
         $logger->info('SSE connection opened');
 
@@ -29,7 +30,7 @@ class SseController extends AbstractController
             echo "data: " . json_encode(['time' => time()]) . "\n\n";
             ob_flush();
             flush();
-            sleep(.2);
+            sleep(1);
         }
     
     }
