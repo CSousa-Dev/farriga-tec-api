@@ -2,12 +2,12 @@
 
 namespace App\Infra\Doctrine\Entity\Account;
 
-use App\Entity\Device;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use App\Infra\Doctrine\Entity\Account\Email;
+use App\Infra\Doctrine\Entity\Devices\Device;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Domain\Account\Repository\UserRepository;
 use App\Infra\Doctrine\Entity\Security\UserSecurityInfo;
 
