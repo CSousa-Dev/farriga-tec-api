@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiHomeController extends AbstractController
 {
-    #[Route('/api', name: 'api_home', methods: ['GET'])]
+    #[Route('/', name: 'api_home', methods: ['GET'])]
     public function index(): JsonResponse
     {
         return $this->json([
