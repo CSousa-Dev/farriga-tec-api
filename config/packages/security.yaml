@@ -36,6 +36,7 @@ security:
         - { path: ^/api/validation, roles: PUBLIC_ACCESS }
         - { path: ^/api/test, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/ , roles: PUBLIC_ACCESS }
 
 when@test:
     security:
