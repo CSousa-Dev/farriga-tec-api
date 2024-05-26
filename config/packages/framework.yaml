@@ -3,6 +3,9 @@ framework:
     secret: '%env(APP_SECRET)%'
     #csrf_protection: true
 
+    http_client:
+        trusted_proxies: ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP']
+
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
