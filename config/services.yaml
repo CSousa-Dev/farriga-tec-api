@@ -4,11 +4,16 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    app.MQTT_SERVER: '%env(MQTT_SERVER)%'
+    app.MQTT_PORT: '%env(MQTT_PORT)%'
+    app.MQTT_USER: '%env(MQTT_USER)%'
+    app.MQTT_PASSWORD: '%env(MQTT_PASSWORD)%'
 services:
     App\Domain\Validations\Validator: '@App\Service\Validation\SymfonyValidator'
 
     App\Domain\Validations\IConstraints: '@App\Service\Validation\SymfonyConstraints'
+
+    # App\Domain\Devices\IUserCommunicator: '@App\Infra\UserCommunicationSSE'
 
     App\Domain\Account\Documents\ValidationRules\DocumentValidation: 
         arguments:

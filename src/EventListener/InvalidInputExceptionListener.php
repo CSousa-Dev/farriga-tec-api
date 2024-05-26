@@ -6,9 +6,6 @@ use App\Application\InvalidInputException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-
 class InvalidInputExceptionListener
 {
     public function __invoke(ExceptionEvent $event): void
@@ -17,7 +14,6 @@ class InvalidInputExceptionListener
         {
             return;
         }
-
     
         /**
          * @var InvalidInputException

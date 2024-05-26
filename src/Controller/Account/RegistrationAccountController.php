@@ -48,7 +48,7 @@ class RegistrationAccountController extends AbstractController
         $payload = json_decode($json);
 
 
-        if(is_null($payload->requestBody))
+        if(is_null($payload))
         {
             return $this->json(
                 data: [
@@ -57,8 +57,6 @@ class RegistrationAccountController extends AbstractController
                 status: 422
             );
         }
-
-        $payload = $payload->requestBody;
 
         $address = isset($payload->address) ? new AddressDTO(
             street:         $this->ifIssetGet($payload->address, 'street'),

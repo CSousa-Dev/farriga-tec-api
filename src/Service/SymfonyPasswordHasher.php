@@ -2,7 +2,7 @@
 namespace App\Service;
 use App\Domain\Account\User\User;
 use App\Domain\Account\User\IPasswordHasher;
-use App\Infra\Doctrine\Entity\UserSecurityInfo;
+use App\Infra\Doctrine\Entity\Security\UserSecurityInfo;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SymfonyPasswordHasher implements IPasswordHasher

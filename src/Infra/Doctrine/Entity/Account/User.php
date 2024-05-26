@@ -2,7 +2,10 @@
 
 namespace App\Infra\Doctrine\Entity\Account;
 
+use App\Entity\Device;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Infra\Doctrine\Entity\Account\Email;
 use App\Domain\Account\Repository\UserRepository;
@@ -43,6 +46,17 @@ class User
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?Address $address = null;
+
+    /**
+     * @var Collection<int, Device>
+     */
+    #[ORM\OneToMany(targetEntity: Device::class, mappedBy: 'owner')]
+    private Collection $devices;
+
+    public function __construct()
+    {
+        $this->devices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -141,6 +155,36 @@ class User
     public function setBirthDate(DateTimeImmutable $birthDate): static
     {
         $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Device>
+     */
+    public function getDevices(): Collection
+    {
+        return $this->devices;
+    }
+
+    public function addDevice(Device $device): static
+    {
+        if (!$this->devices->contains($device)) {
+            $this->devices->add($device);
+            $device->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevice(Device $device): static
+    {
+        if ($this->devices->removeElement($device)) {
+            // set the owning side to null (unless already changed)
+            if ($device->getOwner() === $this) {
+                $device->setOwner(null);
+            }
+        }
 
         return $this;
     }

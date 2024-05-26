@@ -12,6 +12,7 @@ use App\Infra\Doctrine\Repository\Security\UserSecurityInfoRepository;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserSecurityInfoRepository::class)]
+#[ORM\Table(name: 'security.user_security_info')]
 class UserSecurityInfo implements UserInterface, PasswordAuthenticatedUserInterface
 {
 

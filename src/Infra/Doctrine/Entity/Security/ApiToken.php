@@ -7,6 +7,7 @@ use App\Infra\Doctrine\Entity\Security\UserSecurityInfo;
 use App\Infra\Doctrine\Repository\Security\ApiTokenRepository;
 
 #[ORM\Entity(repositoryClass: ApiTokenRepository::class)]
+#[ORM\Table(name: 'security.api_token')]
 class ApiToken
 {
     private const PERSONAL_ACCESS_TOKEN_PREFIX = 'tcp_';
