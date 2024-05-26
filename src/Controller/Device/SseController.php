@@ -22,7 +22,7 @@ class SseController extends AbstractController
         // Example data stream
         $response->setCallback(function () {
             while (true) {
-                echo "data: " . json_encode(['time' => date('now')]) . "\n\n";
+                echo "data: " . json_encode(['time' => time()]) . "\n\n";
                 ob_flush();
                 flush();
                 sleep(1);
