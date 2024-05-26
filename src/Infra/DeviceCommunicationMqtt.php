@@ -1,4 +1,5 @@
 <?php 
+namespace App\Infra;
 
 class DeviceCommunication
 {
