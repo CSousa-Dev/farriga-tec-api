@@ -17,6 +17,7 @@ class SseController extends AbstractController
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
         header('X-Accel-Buffering: no');
+        header('Connection: keep-alive');
 
         $logger->info('SSE connection opened');
 
