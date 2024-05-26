@@ -23,7 +23,15 @@
         "symfony/runtime": "7.0.*",
         "symfony/security-bundle": "7.0.*",
         "symfony/validator": "7.0.*",
-        "symfony/yaml": "7.0.*"
+        "symfony/yaml": "7.0.*",        
+        "doctrine/doctrine-fixtures-bundle": "^3.6",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "7.0.*",
+        "symfony/css-selector": "7.0.*",
+        "symfony/maker-bundle": "^1.58",
+        "symfony/phpunit-bridge": "^7.0",
+        "symfony/stopwatch": "7.0.*",
+        "symfony/web-profiler-bundle": "7.0.*"
     },
     "config": {
         "allow-plugins": {
@@ -73,15 +81,5 @@
             "allow-contrib": false,
             "require": "7.0.*"
         }
-    },
-    "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^3.6",
-        "phpunit/phpunit": "^9.5",
-        "symfony/browser-kit": "7.0.*",
-        "symfony/css-selector": "7.0.*",
-        "symfony/maker-bundle": "^1.58",
-        "symfony/phpunit-bridge": "^7.0",
-        "symfony/stopwatch": "7.0.*",
-        "symfony/web-profiler-bundle": "7.0.*"
     }
 }
