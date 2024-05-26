@@ -21,11 +21,15 @@ class SseController extends AbstractController
 
         $logger->info('SSE connection opened');
 
+        echo "data: " . json_encode(['time' => time()]) . "\n\n";
+        ob_flush();
+        flush();
+
         while(true){
             echo "data: " . json_encode(['time' => time()]) . "\n\n";
             ob_flush();
             flush();
-            sleep(1);
+            sleep(.2);
         }
     
     }
