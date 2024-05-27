@@ -16,11 +16,12 @@ class SseController extends AbstractController
     {
         $response = new StreamedResponse();
         $response->setCallback(function (): void {
-            var_dump('Hello World');
-            flush();
-            sleep(2);
-            var_dump('Hello World');
-            flush();
+            while (true) {
+                echo 'data: ' . json_encode(['message' => 'Hello World']) . PHP_EOL;
+                echo PHP_EOL;
+                flush();
+                sleep(2);
+            }
         });
         $response->send();
     }
