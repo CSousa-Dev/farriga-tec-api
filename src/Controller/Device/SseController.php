@@ -27,6 +27,11 @@ class SseController extends AbstractController
         flush();
 
         while(true){
+            if(connection_aborted()){
+                $logger->info('SSE connection closed');
+                break;
+            }
+
             echo "data: " . json_encode(['time' => time()]) . "\n\n";
             ob_flush();
             flush();
