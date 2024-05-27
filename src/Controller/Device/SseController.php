@@ -14,29 +14,14 @@ class SseController extends AbstractController
         LoggerInterface $logger
     )
     {
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-        header('X-Accel-Buffering: no');
-        header('Connection: keep-alive');
-        set_time_limit(5000000);
-
-        $logger->info('SSE connection opened');
-
-        echo "data: " . json_encode(['time' => time()]) . "\n\n";
-        ob_flush();
-        flush();
-
-        while(true){
-            if(connection_aborted()){
-                $logger->info('SSE connection closed');
-                break;
-            }
-
-            echo "data: " . json_encode(['time' => time()]) . "\n\n";
-            ob_flush();
+        $response = new StreamedResponse();
+        $response->setCallback(function (): void {
+            var_dump('Hello World');
             flush();
-            sleep(1);
-        }
-    
+            sleep(2);
+            var_dump('Hello World');
+            flush();
+        });
+        $response->send();
     }
 }
