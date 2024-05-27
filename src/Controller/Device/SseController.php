@@ -18,7 +18,7 @@ class SseController extends AbstractController
         header('Cache-Control: no-cache');
         header('X-Accel-Buffering: no');
         header('Connection: keep-alive');
-        set_time_limit(0);
+        set_time_limit(5000000);
 
         $logger->info('SSE connection opened');
 
