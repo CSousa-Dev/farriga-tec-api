@@ -25,5 +25,12 @@ class SseController extends AbstractController
         echo "data: " . json_encode(['time' => time()]) . "\n\n";
         ob_flush();
         flush();
+
+        while(true){
+            echo "data: " . json_encode(['time' => time()]) . "\n\n";
+            ob_flush();
+            flush();
+            sleep(1);
+        }
     }
 }
