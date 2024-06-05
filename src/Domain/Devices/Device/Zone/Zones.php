@@ -11,7 +11,7 @@ class Zones extends SortableList
     {
         if($alias === null)
         {
-            $alias = "Zone " . count($this->items);
+            $alias = "Zone " . count($this->items) + 1;
         }
 
         $zone = new Zone(position: $this->nextPosition(), alias: $alias);
@@ -25,7 +25,28 @@ class Zones extends SortableList
      */
     public function addZone(Zone $zone)
     {
+        if($this->checkNewAliasAlreadyExists($zone->alias()))
+        {
+            throw new \DomainException('Não são permitidas zonas com o mesmo nome de identificação, informe um nome diferente.');
+        }
+
         $this->items[$zone->position()] = $zone;
+    }
+
+    private function checkNewAliasAlreadyExists(string $alias): bool
+    {
+        /**
+         * @var Zone $zone
+         */
+        foreach($this->items as $zone)
+        {
+            if($zone->alias() === $alias)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getZone($position): Zone
