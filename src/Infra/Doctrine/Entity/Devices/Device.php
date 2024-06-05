@@ -2,16 +2,16 @@
 
 namespace App\Infra\Doctrine\Entity\Devices;
 
-use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping as ORM;
 use App\Infra\Doctrine\Entity\Account\User;
+use App\Infra\Doctrine\Entity\Devices\Zone;
 use Doctrine\Common\Collections\Collection;
-use App\Infra\Doctrine\Entity\Devices\Sensor;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Infra\Doctrine\Entity\Devices\DeviceType;
 use App\Infra\Doctrine\Repository\Devices\DeviceRepository;
 
 #[ORM\Entity(repositoryClass: DeviceRepository::class)]
-#[Table(name: 'devices.device')]
+#[ORM\Table(name: 'devices.device')]
 class Device
 {
     #[ORM\Id]
@@ -19,34 +19,34 @@ class Device
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $model = null;
+    #[ORM\ManyToOne(inversedBy: 'devices')]
+    private ?User $owner = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $alias = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(nullable: false)]
     private ?string $macAddress = null;
 
+    #[ORM\Column]
+    private ?bool $power = null;
+
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $irrigatedAt = null;
+    private ?int $position = null;
 
     /**
-     * @var Collection<int, Sensor>
+     * @var Collection<int, Zone>
      */
-    #[ORM\OneToMany(targetEntity: Sensor::class, mappedBy: 'device')]
-    private Collection $Sensors;
+    #[ORM\OneToMany(targetEntity: Zone::class, mappedBy: 'Device', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $zones;
 
-    #[ORM\ManyToOne(inversedBy: 'devices')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?User $owner = null;
+
+    #[ORM\ManyToOne(inversedBy: 'Devices', cascade: ['persist'])]
+    private ?DeviceType $deviceType = null;
 
     public function __construct()
     {
-        $this->Sensors = new ArrayCollection();
+        $this->zones = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -54,26 +54,14 @@ class Device
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getOwner(): ?User
     {
-        return $this->name;
+        return $this->owner;
     }
 
-    public function setName(string $name): static
+    public function setOwner(?User $owner): static
     {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getModel(): ?string
-    {
-        return $this->model;
-    }
-
-    public function setModel(string $model): static
-    {
-        $this->model = $model;
+        $this->owner = $owner;
 
         return $this;
     }
@@ -90,6 +78,18 @@ class Device
         return $this;
     }
 
+    public function isPower(): ?bool
+    {
+        return $this->power;
+    }
+
+    public function setPower(bool $power): static
+    {
+        $this->power = $power;
+
+        return $this;
+    }
+
     public function getMacAddress(): ?string
     {
         return $this->macAddress;
@@ -102,56 +102,56 @@ class Device
         return $this;
     }
 
-    public function getIrrigatedAt(): ?\DateTimeImmutable
+    public function getPosition(): ?int
     {
-        return $this->irrigatedAt;
+        return $this->position;
     }
 
-    public function setIrrigatedAt(?\DateTimeImmutable $irrigatedAt): static
+    public function setPosition(int $position): static
     {
-        $this->irrigatedAt = $irrigatedAt;
+        $this->position = $position;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Sensor>
+     * @return Collection<int, Zone>
      */
-    public function getSensors(): Collection
+    public function getZones(): Collection
     {
-        return $this->Sensors;
+        return $this->zones;
     }
 
-    public function addSensor(Sensor $sensor): static
+    public function addZone(Zone $zone): static
     {
-        if (!$this->Sensors->contains($sensor)) {
-            $this->Sensors->add($sensor);
-            $sensor->setDevice($this);
+        if (!$this->zones->contains($zone)) {
+            $this->zones->add($zone);
+            $zone->setDevice($this);
         }
 
         return $this;
     }
 
-    public function removeSensor(Sensor $sensor): static
+    public function removeZone(Zone $zone): static
     {
-        if ($this->Sensors->removeElement($sensor)) {
+        if ($this->zones->removeElement($zone)) {
             // set the owning side to null (unless already changed)
-            if ($sensor->getDevice() === $this) {
-                $sensor->setDevice(null);
+            if ($zone->getDevice() === $this) {
+                $zone->setDevice(null);
             }
         }
 
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getDeviceType(): ?DeviceType
     {
-        return $this->owner;
+        return $this->deviceType;
     }
 
-    public function setOwner(?User $owner): static
+    public function setDeviceType(?DeviceType $deviceType): static
     {
-        $this->owner = $owner;
+        $this->deviceType = $deviceType;
 
         return $this;
     }

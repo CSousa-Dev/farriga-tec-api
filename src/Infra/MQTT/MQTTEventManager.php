@@ -49,7 +49,7 @@ class MQTTEventManager implements IEventManager
         $this->subscriptions[] = new Subscription($event, $callback);
     }
 
-    public function notify(string $event, $data): void
+    public function emit(string $event, $data): void
     {
         $this->client->publish(
             $event,

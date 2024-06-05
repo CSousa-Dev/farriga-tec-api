@@ -26,7 +26,7 @@ class NotConfirmedEmailExceptionistener
             'token' => $exception->authToken()
         ];
             
-        $response = new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        $response = new JsonResponse($data, 40101);
         $event->setResponse($response);
     }
 }

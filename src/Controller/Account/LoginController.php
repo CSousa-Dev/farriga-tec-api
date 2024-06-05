@@ -24,7 +24,7 @@ class LoginController extends AbstractController
         $token = new ApiToken(); 
         $userWithToken = $userSecurityInfoRepository->addApiToken($userSecurityInfo, $token);
 
-        // $domainUser = $userWithToken->getDomainUser();
+        $domainUser = $userWithToken->getDomainUser();
 
         // if($domainUser->getEmail()->getValidatedAt() === null) {
         //     throw new NotConfirmedEmailException(token: $token->getToken());
@@ -34,5 +34,6 @@ class LoginController extends AbstractController
             'user'  => $userWithToken->getUserIdentifier(),
             'token' => $token->getToken(),
         ]);
+
     }
 }

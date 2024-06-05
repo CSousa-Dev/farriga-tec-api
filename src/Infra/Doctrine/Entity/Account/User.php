@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use App\Infra\Doctrine\Entity\Account\Email;
+use App\Infra\Doctrine\Entity\Devices\Share;
 use App\Infra\Doctrine\Entity\Devices\Device;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Domain\Account\Repository\UserRepository;
@@ -53,9 +54,23 @@ class User
     #[ORM\OneToMany(targetEntity: Device::class, mappedBy: 'owner')]
     private Collection $devices;
 
+    /**
+     * @var Collection<int, Share>
+     */
+    #[ORM\OneToMany(targetEntity: Share::class, mappedBy: 'receiver', orphanRemoval: true)]
+    private Collection $sharedDevices;
+
+    /**
+     * @var Collection<int, Share>
+     */
+    #[ORM\OneToMany(targetEntity: Share::class, mappedBy: 'sharer')]
+    private Collection $mySharing;
+
     public function __construct()
     {
         $this->devices = new ArrayCollection();
+        $this->sharedDevices = new ArrayCollection();
+        $this->mySharing = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +198,66 @@ class User
             // set the owning side to null (unless already changed)
             if ($device->getOwner() === $this) {
                 $device->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Share>
+     */
+    public function getSharedDevices(): Collection
+    {
+        return $this->sharedDevices;
+    }
+
+    public function addSharedDevice(Share $sharedDevice): static
+    {
+        if (!$this->sharedDevices->contains($sharedDevice)) {
+            $this->sharedDevices->add($sharedDevice);
+            $sharedDevice->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSharedDevice(Share $sharedDevice): static
+    {
+        if ($this->sharedDevices->removeElement($sharedDevice)) {
+            // set the owning side to null (unless already changed)
+            if ($sharedDevice->getReceiver() === $this) {
+                $sharedDevice->setReceiver(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Share>
+     */
+    public function getMySharing(): Collection
+    {
+        return $this->mySharing;
+    }
+
+    public function addMySharing(Share $mySharing): static
+    {
+        if (!$this->mySharing->contains($mySharing)) {
+            $this->mySharing->add($mySharing);
+            $mySharing->setSharer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMySharing(Share $mySharing): static
+    {
+        if ($this->mySharing->removeElement($mySharing)) {
+            // set the owning side to null (unless already changed)
+            if ($mySharing->getSharer() === $this) {
+                $mySharing->setSharer(null);
             }
         }
 

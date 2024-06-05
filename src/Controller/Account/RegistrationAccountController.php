@@ -89,8 +89,7 @@ class RegistrationAccountController extends AbstractController
         $registerAccountService->execute($registerAccountDto);
 
         return $this->json([
-            'message' => 'Registro de uma nova conta',
-            'path' => 'src/Controller/AccountController.php',
+            'message' => 'Registered account successfully.'
         ]);
     }
 

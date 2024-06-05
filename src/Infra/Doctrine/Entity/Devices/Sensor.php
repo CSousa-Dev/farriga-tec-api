@@ -2,12 +2,13 @@
 
 namespace App\Infra\Doctrine\Entity\Devices;
 
-use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Infra\Doctrine\Repository\Devices\SensorRepository;
 
 #[ORM\Entity(repositoryClass: SensorRepository::class)]
-#[Table(name: 'devices.device')]
+#[ORM\Table(name: 'devices.sensor')]
 class Sensor
 {
     #[ORM\Id]
@@ -15,68 +16,125 @@ class Sensor
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'sensors')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?SensorTypes $type = null;
+    private ?Zone $zone = null;
 
     #[ORM\Column]
-    private ?bool $usage = null;
+    private ?int $position = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $treshold = null;
+    #[ORM\Column]
+    private ?int $number = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Sensors')]
-    private ?Device $device = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?SensorType $SensorType = null;
+
+    /**
+     * @var Collection<int, Measure>
+     */
+    #[ORM\OneToMany(targetEntity: Measure::class, mappedBy: 'Sensor', orphanRemoval: true)]
+    private Collection $measures;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Treshold $treshold = null;
+
+    public function __construct()
+    {
+        $this->measures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getType(): ?SensorTypes
+    public function getZone(): ?Zone
     {
-        return $this->type;
+        return $this->zone;
     }
 
-    public function setType(?SensorTypes $type): static
+    public function setZone(?Zone $zone): static
     {
-        $this->type = $type;
+        $this->zone = $zone;
 
         return $this;
     }
 
-    public function isUsage(): ?bool
+    public function getPosition(): ?int
     {
-        return $this->usage;
+        return $this->position;
     }
 
-    public function setUsage(bool $usage): static
+    public function setPosition(int $position): static
     {
-        $this->usage = $usage;
+        $this->position = $position;
 
         return $this;
     }
 
-    public function getTreshold(): ?string
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): static
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    public function getSensorType(): ?SensorType
+    {
+        return $this->SensorType;
+    }
+
+    public function setSensorType(?SensorType $SensorType): static
+    {
+        $this->SensorType = $SensorType;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Measure>
+     */
+    public function getMeasures(): Collection
+    {
+        return $this->measures;
+    }
+
+    public function addMeasure(Measure $measure): static
+    {
+        if (!$this->measures->contains($measure)) {
+            $this->measures->add($measure);
+            $measure->setSensor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeasure(Measure $measure): static
+    {
+        if ($this->measures->removeElement($measure)) {
+            // set the owning side to null (unless already changed)
+            if ($measure->getSensor() === $this) {
+                $measure->setSensor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTreshold(): ?Treshold
     {
         return $this->treshold;
     }
 
-    public function setTreshold(string $treshold): static
+    public function setTreshold(?Treshold $treshold): static
     {
         $this->treshold = $treshold;
-
-        return $this;
-    }
-
-    public function getDevice(): ?Device
-    {
-        return $this->device;
-    }
-
-    public function setDevice(?Device $device): static
-    {
-        $this->device = $device;
 
         return $this;
     }

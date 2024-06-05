@@ -43,6 +43,9 @@ services:
     App\EventListener\RegisterAccount\UserEmailAlreadyRegisteredExceptionListener:
         tags: ['kernel.event_listener']
 
+    App\EventListener\DomainExceptionListener:
+        tags: ['kernel.event_listener']
+
 
 
 

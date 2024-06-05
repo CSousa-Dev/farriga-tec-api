@@ -11,9 +11,16 @@ security:
                 property: email
     firewalls:
         dev:
+            stateless: true
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            security: true
+
+            json_login:
+                check_path: login
+            access_token:
+                token_handler: App\Security\AccessTokenHandler
         main:
+            stateless: true
             lazy: true
             provider: app_user_provider
         
@@ -32,11 +39,9 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/account/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/account/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/account, roles: PUBLIC_ACCESS, methods: ['POST'] }
         - { path: ^/api/validation, roles: PUBLIC_ACCESS }
-        - { path: ^/api/test, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: PUBLIC_ACCESS }
-        - { path: ^/ , roles: PUBLIC_ACCESS }
+        - { path: '^/api', roles: ROLE_USER }
 
 when@test:
     security:
