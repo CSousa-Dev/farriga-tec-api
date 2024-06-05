@@ -71,6 +71,7 @@ class DeviceRepository extends ServiceEntityRepository implements IDeviceReposit
 
     public function hydrateDomainDevice(Device $device): DomainDevice
     {
+        $this->getEntityManager()->refresh($device);
         $zones = $this->zoneRepository->hydrateZones(...$device->getZones());
 
         return new DomainDevice(
