@@ -16,15 +16,15 @@ class Sensor
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $alias = null;
+
     #[ORM\ManyToOne(inversedBy: 'sensors')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Zone $zone = null;
 
     #[ORM\Column]
     private ?int $position = null;
-
-    #[ORM\Column]
-    private ?int $number = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -49,6 +49,18 @@ class Sensor
         return $this->id;
     }
 
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setAlias(?string $alias): static
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
     public function getZone(): ?Zone
     {
         return $this->zone;
@@ -69,18 +81,6 @@ class Sensor
     public function setPosition(int $position): static
     {
         $this->position = $position;
-
-        return $this;
-    }
-
-    public function getNumber(): ?int
-    {
-        return $this->number;
-    }
-
-    public function setNumber(int $number): static
-    {
-        $this->number = $number;
 
         return $this;
     }

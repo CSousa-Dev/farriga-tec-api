@@ -3,10 +3,16 @@ namespace App\Domain\Devices\Device\Zone;
 
 use App\Domain\Devices\SortableList;
 use App\Domain\Devices\Device\Zone\Zone;
+use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
 
 class Zones extends SortableList
 {
+    /**
+     * @var Zone[]
+     */
+    protected array $items = []; 
+
     public function createZone(string $alias = null): int
     {
         if($alias === null)
@@ -70,5 +76,18 @@ class Zones extends SortableList
         $zone = $this->getZone($zonePosition);
         $zone->changeIrrigatorPositions(...$positionConfig);
         $this->items[$zone->position()] = $zone;
+    }
+
+    public function addSensor(
+        Sensor $sensor,
+        int $zonePosition
+    ): int
+    {
+        if(!isset($this->items[$zonePosition]))
+        {
+            throw new \DomainException("Zona não localizada. Informe uma zona válida para adicionar um sensor.");
+        }
+
+        return $this->items[$zonePosition]->addSensor($sensor);
     }
 }

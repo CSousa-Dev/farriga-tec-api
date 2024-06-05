@@ -25,7 +25,6 @@ class SensorType
     #[ORM\Column]
     private ?bool $canChangeTreshold = null;
 
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

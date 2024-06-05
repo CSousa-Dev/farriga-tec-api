@@ -3,6 +3,7 @@ namespace App\Domain\Devices\Device;
 
 use App\Domain\Devices\Sortable;
 use App\Domain\Devices\Device\Zone\Zones;
+use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
 
 class Device extends Sortable
@@ -84,5 +85,16 @@ class Device extends Sortable
     public function zones(): Zones
     {
         return $this->zones;
+    }
+
+    public function addSensor(
+        Sensor $sensor,
+        int $zonePosition
+    ): int
+    {
+        return $this->zones->addSensor(
+            $sensor,
+            $zonePosition
+        );
     }
 }

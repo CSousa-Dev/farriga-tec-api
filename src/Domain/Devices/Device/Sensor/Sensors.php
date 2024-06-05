@@ -9,9 +9,14 @@ class Sensors extends SortableList
     /**
      * @var Sensor[]
      */
-    public function addSensor(Sensor $sensor)
+    public function addSensor(Sensor $sensor): int
     {
-        $this->items[$sensor->id] = $sensor;
+        if($sensor->position === null) {
+            $sensor->position = $this->nextPosition();
+        }
+
+        $this->items[$sensor->position()] = $sensor;
+        return $sensor->position();
     }
 
     public function getSensor($id): Sensor

@@ -16,6 +16,16 @@ class SensorTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, SensorType::class);
     }
 
+    public function modelExists(int $modelId): bool
+    {
+        return $this->find($modelId) !== null;
+    }
+
+    public function findByModelName(string $modelName): ?SensorType
+    {
+        return $this->findOneBy(['model' => $modelName]);
+    }
+
 //    /**
 //     * @return SensorType[] Returns an array of SensorType objects
 //     */

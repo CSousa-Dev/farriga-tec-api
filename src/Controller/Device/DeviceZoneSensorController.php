@@ -4,17 +4,16 @@ namespace App\Controller\Device;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Application\Device\DTOs\NewDeviceZoneDTO;
-use App\Controller\Device\Resposes\DeviceResponse;
-use App\Application\Device\Services\AddZoneToDeviceService;
+use App\Application\Device\DTOs\NewSensorZoneDeviceDTO;
+use App\Application\Device\Services\AddSensorToZoneDeviceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class DeviceZoneController extends AbstractController
+class DeviceZoneSensorController extends AbstractController
 {
-    #[Route('/device/zone', name: 'add_zone_to_device', methods: ['POST'])]
-    public function addNewZone(
+    #[Route('/device/zone/sensor', name: 'add_sensor_to_zone', methods: ['POST'])]
+    public function addNewSensor(
         Request $request,
-        AddZoneToDeviceService $addNewZoneToDeviceService
+        AddSensorToZoneDeviceService $addNewZoneToDeviceService
     ): Response
     {
         $json = $request->getContent();
@@ -30,17 +29,18 @@ class DeviceZoneController extends AbstractController
             );
         }
 
-        $newDeviceZoneDTO = new NewDeviceZoneDTO(
+        $newSensorDTO = new NewSensorZoneDeviceDTO(
             macAddress: $payload->macAddress,
-            alias: $payload->alias ?? null
+            alias: $payload->alias ?? null,
+            zonePosition: $payload->zonePosition,
+            sensorModelId: $payload->sensorModelId
         );
 
-        $device = $addNewZoneToDeviceService->execute($newDeviceZoneDTO);
+        $addNewZoneToDeviceService->execute($newSensorDTO);
 
         return $this->json(
             data: [
-                'message' => 'Zone successfully created and added to the device.',
-                'device' => (new DeviceResponse($device))->toArray()
+                'message' => 'Sensor successfully created and added to the devices zone.',
             ],
             status: 201
         );    

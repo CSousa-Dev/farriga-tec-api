@@ -7,18 +7,18 @@ use App\Domain\Devices\Sensor\SensorActionsConfig;
 
 class Sensor extends Sortable
 {
-    private array $configuredEvents;
+    private array $configuredEvents = [];
 
     public function __construct(
-        public  readonly int $id,
-        private int             $position,
+        public  readonly string $model,  
         public  readonly string $name,
         public  readonly SensorActionsConfig $actionsConfig, 
-        EventConfig          ...$eventConfig   
+        public  readonly ?string $unit  = null,
+        public  readonly ?int $id        = null,
+        public           ?int $position = null,
+        private          ?string $alias = null,
     )
-    {
-        $this->configuredEvents = $eventConfig;
-    }
+    {}
 
     public function position(): int
     {
@@ -30,11 +30,31 @@ class Sensor extends Sortable
         return $this->id;
     }
 
+    public function addCondifguredEvents(EventConfig ...$eventConfig): void
+    {
+        $this->configuredEvents = $eventConfig;
+    }
+
     /**     
      * @return EventConfig[]
      */
     public function configuredEvents()
     {
         return $this->configuredEvents;
+    }
+
+    public function alias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function changeAlias(string $newAlias): void
+    {
+        $this->alias = $newAlias;
+    }
+
+    public function changePosition(int $newPosition): void
+    {
+        $this->position = $newPosition;
     }
 }

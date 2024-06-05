@@ -17,6 +17,7 @@ class DeviceRepository extends ServiceEntityRepository implements IDeviceReposit
     public function __construct(
         private DeviceTypeRepository $deviceTypeRepository,
         private ZoneRepository $zoneRepository,
+        private SensorRepository $sensorRepository,
         ManagerRegistry $registry)
     {
         parent::__construct($registry, Device::class);
@@ -38,6 +39,13 @@ class DeviceRepository extends ServiceEntityRepository implements IDeviceReposit
     public function addNewZone(DomainDevice $device, int $zonePosition): void
     {
         $this->zoneRepository->addNew($device->id, $device->zones()->getZone($zonePosition));
+    }
+
+    public function addNewSensor(DomainDevice $device, int $zonePosition, int $sensorPosition): void
+    {
+        $zone = $device->zones()->getZone($zonePosition);
+        $sensor = $zone->getSensors()->getSensor($sensorPosition);
+        $this->sensorRepository->addNew($zone->id(), $sensor);
     }
 
     public function isMacAddressInUse(string $macAddress): bool

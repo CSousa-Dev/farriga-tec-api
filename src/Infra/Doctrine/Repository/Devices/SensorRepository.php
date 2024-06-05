@@ -2,18 +2,103 @@
 
 namespace App\Infra\Doctrine\Repository\Devices;
 
+use App\Domain\Devices\Sensor\SensorActionsConfig;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Domain\Devices\Events\EventConfig;
+use App\Infra\Doctrine\Entity\Devices\Zone;
+use Symfony\Contracts\EventDispatcher\Event;
 use App\Infra\Doctrine\Entity\Devices\Sensor;
+use App\Infra\Doctrine\Entity\Devices\EventType;
+use App\Infra\Doctrine\Entity\Devices\SensorType;
+use App\Domain\Devices\Repository\ISensorRepository;
+use App\Domain\Devices\Device\Sensor\Sensor as DomainSensor;
+use App\Domain\Devices\Device\Sensor\TresholdType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Sensor>
  */
-class SensorRepository extends ServiceEntityRepository
+class SensorRepository extends ServiceEntityRepository implements ISensorRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        private SensorTypeRepository $sensorTypeRepository,    
+        ManagerRegistry $registry
+    )
     {
         parent::__construct($registry, Sensor::class);
+    }
+
+    public function buildSensorModel(int $modelId): DomainSensor
+    {
+        
+        $sensorType = $this->sensorTypeRepository->find($modelId);
+
+        if($sensorType === null){
+            throw new \DomainException("Modelo de sensor não localizado.");
+        }     
+        
+        /**
+         * @var SensorType $sensorType
+         */
+        
+        return new DomainSensor(
+            model: $sensorType->getModel(),
+            name: $sensorType->getLabel(),
+            actionsConfig: new SensorActionsConfig(
+                $sensorType->isCanControllStartStop(),
+                $sensorType->isCanChangeTreshold(),
+                TresholdType::EXACT
+            )
+        );
+    }
+
+    public function modelExists(int $modelId): bool
+    {
+        return $this->sensorTypeRepository->find($modelId) !== null;
+    }
+
+    public function addNew(int $zoneId, DomainSensor $sensor): void
+    {
+        $entityManager = $this->getEntityManager();
+        $entitySensor = new Sensor();
+        $entitySensor->setPosition($sensor->position());
+        $entitySensor->setZone($entityManager->getReference(Zone::class, $zoneId)); 
+        $entitySensor->setAlias($sensor->alias());
+        $entitySensor->setSensorType($this->sensorTypeRepository->findByModelName($sensor->model));
+
+        $entityManager->persist($entitySensor);
+        $entityManager->flush();
+    }
+
+    public function hydrateSensor(Sensor $sensor): DomainSensor
+    {
+
+        $events = $sensor->getSensorType()->getCondifguredEvents()->map(function(EventType $eventType){
+            return new EventConfig(
+                eventName: $eventType->getName(), 
+                canListen: $eventType->canListen(),
+                canEmit: $eventType->isCanEmit(),
+                listenKey: $eventType->getListenKey(),
+                emitKey: $eventType->getEmitKey()
+            );
+        });
+
+        $domainSensor = new DomainSensor(
+            id: $sensor->getId(),
+            position: $sensor->getPosition(),
+            model: $sensor->getSensorType()->getModel(),
+            name: $sensor->getSensorType()->getLabel(),
+            alias: $sensor->getAlias(),
+            actionsConfig: new SensorActionsConfig(
+                $sensor->getSensorType()->isCanControllStartStop(),
+                $sensor->getSensorType()->isCanChangeTreshold(),
+                TresholdType::EXACT
+            )
+        );
+        
+        $domainSensor->addCondifguredEvents(...$events->toArray());
+
+        return $domainSensor;
     }
 
 //    /**
