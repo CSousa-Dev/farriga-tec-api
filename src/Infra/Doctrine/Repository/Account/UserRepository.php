@@ -53,6 +53,14 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         return false;
     }
 
+    public function getUserByEmailAddress(
+        string $email
+    )
+    {
+        $email = $this->emailRepository->findBy(['address' => $email]);
+        return $this->findOneBy(['email' => $email]);
+    }
+
     public function registerNewUser(User $user, string $hashedPassword): void
     {
         /**

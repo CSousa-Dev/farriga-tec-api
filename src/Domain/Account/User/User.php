@@ -6,11 +6,11 @@ use LogicException;
 use InvalidArgumentException;
 use App\Domain\Account\User\Email;
 use App\Domain\Validations\Validable;
+use App\Domain\Account\User\SecurityInfo;
 use App\Domain\Account\Documents\Document;
 use App\Domain\Validations\ValidationList;
 use App\Domain\Validations\ValidationResult;
 use App\Domain\Account\User\ValidationRules\UserValidation;
-use SecurityInfo;
 
 class User extends Validable {
 

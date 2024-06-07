@@ -2,25 +2,67 @@
 
 namespace App\Infra\Doctrine\Repository\Devices;
 
+use App\Domain\Devices\Device\DeviceType;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Infra\Doctrine\Entity\Devices\Device;
 use App\Domain\Devices\Repository\IDeviceRepository;
 use App\Domain\Devices\Device\Device as DomainDevice;
-use App\Domain\Devices\Device\DeviceType;
+use App\Infra\Doctrine\Repository\Account\UserRepository;
+use App\Domain\Account\Repository\IUserDevicesListRepository;
+use App\Infra\Doctrine\Repository\Devices\IrrigatorRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Device>
  */
-class DeviceRepository extends ServiceEntityRepository implements IDeviceRepository
+class DeviceRepository extends ServiceEntityRepository implements IDeviceRepository, IUserDevicesListRepository
 {
     public function __construct(
         private DeviceTypeRepository $deviceTypeRepository,
         private ZoneRepository $zoneRepository,
         private SensorRepository $sensorRepository,
+        private IrrigatorRepository $irrigatorRepository,
+        private UserRepository $userRepository,
         ManagerRegistry $registry)
     {
         parent::__construct($registry, Device::class);
+    }
+
+    public function currentLinkedUserEmail(string $macAddress): string
+    {
+        $device = $this->findOneBy(['macAddress' => $macAddress]);
+        $owner = $device->getOwner();
+        return $owner->getEmail()->getAddress();
+    }
+
+    public function deviceExists(string $macAddress): bool
+    {
+        if($this->isMacAddressInUse($macAddress))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isDeviceAlreadyLinked(string $macAddress): bool
+    {
+        return $this->findOneBy(['macAddress' => $macAddress])->getOwner() !== null;
+    }
+
+    public function linkDeviceToUser(string $macAddress, string $userEmail): void
+    {
+        $device = $this->findOneBy(['macAddress' => $macAddress]);
+        $user = $this->userRepository->getUserByEmailAddress($userEmail);
+        $device->setOwner($user);
+        $this->getEntityManager()->flush();
+    }
+
+    public function unlinkDevice(string $macAddress): void
+    {
+        $device = $this->findOneBy(['macAddress' => $macAddress]);
+        $device->setOwner(null);
+        $this->getEntityManager()->flush();
     }
 
     public function addNew(DomainDevice $domainDevice): void
@@ -46,6 +88,13 @@ class DeviceRepository extends ServiceEntityRepository implements IDeviceReposit
         $zone = $device->zones()->getZone($zonePosition);
         $sensor = $zone->getSensors()->getSensor($sensorPosition);
         $this->sensorRepository->addNew($zone->id(), $sensor);
+    }
+
+    public function addNewIrrigator(DomainDevice $device, int $zonePosition, int $irrigatorPosition): void
+    {
+        $zone = $device->zones()->getZone($zonePosition);
+        $irrigator = $zone->getIrrigators()->getIrrigator($irrigatorPosition);
+        $this->irrigatorRepository->addNew($zone->id(), $irrigator);
     }
 
     public function isMacAddressInUse(string $macAddress): bool
@@ -90,30 +139,4 @@ class DeviceRepository extends ServiceEntityRepository implements IDeviceReposit
             zones: $zones
         );
     }
-
-
-//    /**
-//     * @return Device[] Returns an array of Device objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('d')
-//            ->andWhere('d.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('d.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Device
-//    {
-//        return $this->createQueryBuilder('d')
-//            ->andWhere('d.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
