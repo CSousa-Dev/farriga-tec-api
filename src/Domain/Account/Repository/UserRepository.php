@@ -1,7 +1,6 @@
 <?php
 namespace App\Domain\Account\Repository;
 
-use App\Domain\Account\User\PlainTextPassword;
 use App\Domain\Account\User\User;
 
 interface UserRepository
