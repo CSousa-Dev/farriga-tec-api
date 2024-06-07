@@ -5,6 +5,7 @@ use App\Domain\Devices\Sortable;
 use App\Domain\Devices\Device\Zone\Zones;
 use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
+use App\Domain\Devices\Device\Irrigator\Irrigator;
 
 class Device extends Sortable
 {
@@ -79,7 +80,7 @@ class Device extends Sortable
         if($this->ownerId === null)
             $this->ownerId = $userId;
 
-        throw new \Exception("Device already has an owner");
+        throw new \DomainException("Dispositivo já está vinculado a um usuário.");
     }
 
     public function zones(): Zones
@@ -94,6 +95,17 @@ class Device extends Sortable
     {
         return $this->zones->addSensor(
             $sensor,
+            $zonePosition
+        );
+    }
+
+    public function addIrrigator(
+        Irrigator $irrigator,
+        int $zonePosition
+    ): int
+    {
+        return $this->zones->addIrrigator(
+            $irrigator,
             $zonePosition
         );
     }

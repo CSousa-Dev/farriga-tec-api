@@ -1,7 +1,7 @@
 <?php 
 namespace App\Domain\Devices\Repository;
 
-use App\Domain\Devices\Irrigator\Irrigator;
+use App\Domain\Devices\Device\Irrigator\Irrigator;
 
 interface IIrrigatorRepository
 {

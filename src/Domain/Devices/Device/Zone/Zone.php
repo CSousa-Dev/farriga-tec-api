@@ -5,6 +5,7 @@ use App\Domain\Devices\Sortable;
 use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
 use App\Domain\Devices\Device\Sensor\Sensors;
+use App\Domain\Devices\Device\Irrigator\Irrigator;
 use App\Domain\Devices\Device\Irrigator\Irrigators;
 
 class Zone extends Sortable
@@ -52,8 +53,23 @@ class Zone extends Sortable
         return $this->sensors->addSensor($sensor);
     }
 
+    public function addIrrigator(Irrigator $irrigator): int
+    {
+        if($this->irrigators === null)
+        {
+            $this->irrigators = new Irrigators();
+        }
+
+        return $this->irrigators->addIrrigator($irrigator);
+    }
+
     public function getSensors()
     {
         return $this->sensors;
+    }
+
+    public function getIrrigators()
+    {
+        return $this->irrigators;
     }
 }

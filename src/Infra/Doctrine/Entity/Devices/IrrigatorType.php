@@ -34,6 +34,9 @@ class IrrigatorType
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
+    #[ORM\Column(length: 255, nullable: false)]
+    private ?string $model = null;
+
     /**
      * @var Collection<int, Irrigator>
      */
@@ -91,6 +94,18 @@ class IrrigatorType
         $this->canChangeCheckInterval = $canChangeCheckInterval;
 
         return $this;
+    }
+
+    public function setModel(string $model): static
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    public function getModel(): ?string
+    {
+        return $this->model;
     }
 
     public function canTurnOnTurnOff(): ?bool

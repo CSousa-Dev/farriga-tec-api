@@ -16,6 +16,16 @@ class IrrigatorTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, IrrigatorType::class);
     }
 
+    public function modelExists(int $modelId): bool
+    {
+        return $this->find($modelId) !== null;
+    }
+
+    public function findByModelName(string $modelName): ?IrrigatorType
+    {
+        return $this->findOneBy(['model' => $modelName]);
+    }
+
 //    /**
 //     * @return IrrigatorType[] Returns an array of IrrigatorType objects
 //     */

@@ -20,9 +20,6 @@ class Irrigator
     #[ORM\JoinColumn(nullable: false)]
     private ?Zone $zone = null;
 
-    #[ORM\Column]
-    private ?int $number = null;
-
     #[ORM\ManyToOne(inversedBy: 'irrigators')]
     #[ORM\JoinColumn(nullable: false)]
     private ?IrrigatorType $irrigatorType = null;
@@ -30,7 +27,7 @@ class Irrigator
     #[ORM\Column]
     private ?int $position = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $alias = null;
 
     public function getId(): ?int
@@ -38,24 +35,12 @@ class Irrigator
         return $this->id;
     }
 
-    public function number()
-    {
-        return $this->number;
-    }
-
-    public function setNumber(int $number): static
-    {
-        $this->number = $number;
-
-        return $this;
-    }
-
     public function getAlias(): ?string
     {
         return $this->alias;
     }
 
-    public function setAlias(string $alias): static
+    public function setAlias(?string $alias): static
     {
         $this->alias = $alias;
 

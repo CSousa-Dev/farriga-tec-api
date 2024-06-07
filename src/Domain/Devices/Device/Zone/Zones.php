@@ -5,6 +5,7 @@ use App\Domain\Devices\SortableList;
 use App\Domain\Devices\Device\Zone\Zone;
 use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
+use App\Domain\Devices\Device\Irrigator\Irrigator;
 
 class Zones extends SortableList
 {
@@ -89,5 +90,18 @@ class Zones extends SortableList
         }
 
         return $this->items[$zonePosition]->addSensor($sensor);
+    }
+
+    public function addIrrigator(
+        Irrigator $sensor,
+        int $zonePosition
+    ): int
+    {
+        if(!isset($this->items[$zonePosition]))
+        {
+            throw new \DomainException("Zona não localizada. Informe uma zona válida para adicionar um irrigador.");
+        }
+
+        return $this->items[$zonePosition]->addIrrigator($sensor);
     }
 }

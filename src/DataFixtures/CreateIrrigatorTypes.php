@@ -65,6 +65,7 @@ class CreateIrrigatorTypes extends Fixture
         $irrigator->setCanManualControlIrrigation(true);
         $irrigator->setCanTurnOnTurnOff(true);
         $irrigator->setLabel('Irrigador');
+        $irrigator->setModel('Irrigador 1.0');
         $irrigator->addEventConfig($irrigatioOnEvent);
         $irrigator->addEventConfig($irrigatioOffEvent);
         $irrigator->addEventConfig($irrigatioStartEvent);

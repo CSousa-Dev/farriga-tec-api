@@ -18,6 +18,7 @@ interface IDeviceRepository
     public function findDeviceByMacAddress(string $macAddress): Device | null;
     public function addNewZone(Device $device, int $zonePosition): void;
     public function addNewSensor(Device $device, int $zonePosition, int $sensorPosition): void;
+    public function addNewIrrigator(Device $device, int $zonePosition, int $irrigatorPosition): void;
 
     // public function addZoneToDevice(Zone $zone): void;
     // public function getDeviceType(int $deviceTypeId): DeviceType;   
