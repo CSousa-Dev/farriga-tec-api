@@ -23,8 +23,7 @@ class Device extends Sortable
         public  readonly ?int       $id = null,
         private          bool       $power = true,     
         public           ?int       $position = null,
-        private          ?Zones     $zones = null,
-        // public readonly  ?UserPermissions $userPermissions = null,
+        private          ?Zones     $zones = null
     ){}
 
     public function id(): int
