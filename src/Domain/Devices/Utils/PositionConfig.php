@@ -1,7 +1,7 @@
 <?php
 namespace App\Domain\Devices\Utils;
 
-use App\Domain\Devices\Sortable;
+use App\Domain\Devices\Utils\Sortable;
 
 class PositionConfig extends Sortable
 {

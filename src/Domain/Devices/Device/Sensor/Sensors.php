@@ -1,7 +1,7 @@
 <?php 
 namespace App\Domain\Devices\Device\Sensor;
 
-use App\Domain\Devices\SortableList;
+use App\Domain\Devices\Utils\SortableList;
 use App\Domain\Devices\Device\Sensor\Sensor;
 
 class Sensors extends SortableList

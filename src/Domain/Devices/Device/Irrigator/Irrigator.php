@@ -1,9 +1,9 @@
 <?php 
 namespace App\Domain\Devices\Device\Irrigator;
 
-use App\Domain\Devices\Sortable;
-use App\Domain\Devices\Device\Irrigator\IrrigatorActionsConfig;
+use App\Domain\Devices\Utils\Sortable;
 use App\Domain\Devices\Events\EventConfig;
+use App\Domain\Devices\Device\Irrigator\IrrigatorActionsConfig;
 
 class Irrigator extends Sortable
 {

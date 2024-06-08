@@ -1,7 +1,7 @@
 <?php 
 namespace App\Domain\Devices\Device\Irrigator;
 
-use App\Domain\Devices\SortableList;
+use App\Domain\Devices\Utils\SortableList;
 use App\Domain\Devices\Device\Irrigator\Irrigator;
 
 class Irrigators extends SortableList

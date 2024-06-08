@@ -1,5 +1,5 @@
 <?php 
-namespace App\Domain\Devices;
+namespace App\Domain\Devices\Utils;
 
 abstract class Sortable
 {

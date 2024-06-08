@@ -1,8 +1,9 @@
 <?php 
-namespace App\Domain\Devices;
+namespace App\Domain\Devices\Utils;
 
-use App\Domain\Devices\Utils\PositionConfig;
 use Traversable;
+use App\Domain\Devices\Utils\Sortable;
+use App\Domain\Devices\Utils\PositionConfig;
 
 abstract class SortableList implements \IteratorAggregate
 {

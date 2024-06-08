@@ -1,7 +1,7 @@
 <?php
 namespace App\Domain\Devices\Device\Zone;
 
-use App\Domain\Devices\Sortable;
+use App\Domain\Devices\Utils\Sortable;
 use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
 use App\Domain\Devices\Device\Sensor\Sensors;

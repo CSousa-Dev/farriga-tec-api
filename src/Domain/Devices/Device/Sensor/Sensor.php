@@ -1,7 +1,7 @@
 <?php 
 namespace App\Domain\Devices\Device\Sensor;
 
-use App\Domain\Devices\Sortable;
+use App\Domain\Devices\Utils\Sortable;
 use App\Domain\Devices\Events\EventConfig;
 use App\Domain\Devices\Device\Sensor\SensorActionsConfig;
 

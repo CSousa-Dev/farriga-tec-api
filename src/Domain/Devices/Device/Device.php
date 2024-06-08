@@ -1,13 +1,13 @@
 <?php 
 namespace App\Domain\Devices\Device;
 
-use App\Domain\Devices\Sortable;
+use App\Domain\Devices\Utils\Sortable;
 use App\Domain\Devices\Device\Zone\Zones;
+use App\Domain\Devices\Events\EventConfig;
 use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
 use App\Domain\Devices\Events\DeviceEventsConfig;
 use App\Domain\Devices\Device\Irrigator\Irrigator;
-use App\Domain\Devices\Events\EventConfig;
 
 class Device extends Sortable
 {

@@ -1,8 +1,8 @@
 <?php
 namespace App\Domain\Devices\Device;
 
-use App\Domain\Devices\SortableList;
 use App\Domain\Devices\Device\Device;
+use App\Domain\Devices\Utils\SortableList;
 
 class DeviceList extends SortableList
 {
