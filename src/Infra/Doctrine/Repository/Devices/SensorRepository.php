@@ -2,14 +2,14 @@
 
 namespace App\Infra\Doctrine\Repository\Devices;
 
-use App\Domain\Devices\Sensor\SensorActionsConfig;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Infra\Doctrine\Entity\Devices\Zone;
 use App\Infra\Doctrine\Entity\Devices\Sensor;
 use App\Infra\Doctrine\Entity\Devices\SensorType;
-use App\Domain\Devices\Repository\ISensorRepository;
-use App\Domain\Devices\Device\Sensor\Sensor as DomainSensor;
 use App\Domain\Devices\Device\Sensor\TresholdType;
+use App\Domain\Devices\Repository\ISensorRepository;
+use App\Domain\Devices\Device\Sensor\SensorActionsConfig;
+use App\Domain\Devices\Device\Sensor\Sensor as DomainSensor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**

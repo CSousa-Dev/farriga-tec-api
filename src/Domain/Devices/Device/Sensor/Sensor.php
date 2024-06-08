@@ -1,9 +1,9 @@
 <?php 
 namespace App\Domain\Devices\Device\Sensor;
 
-use App\Domain\Devices\Events\EventConfig;
 use App\Domain\Devices\Sortable;
-use App\Domain\Devices\Sensor\SensorActionsConfig;
+use App\Domain\Devices\Events\EventConfig;
+use App\Domain\Devices\Device\Sensor\SensorActionsConfig;
 
 class Sensor extends Sortable
 {

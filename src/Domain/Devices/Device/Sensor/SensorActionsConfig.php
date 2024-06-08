@@ -1,5 +1,5 @@
 <?php
-namespace App\Domain\Devices\Sensor;
+namespace App\Domain\Devices\Device\Sensor;
 
 use App\Domain\Devices\Device\Sensor\TresholdType;
 
