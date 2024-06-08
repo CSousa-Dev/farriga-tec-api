@@ -6,7 +6,7 @@ use App\Domain\Devices\Utils\Sortable;
 class PositionConfig extends Sortable
 {
     public function __construct(
-        public int $position,
+        public ?int $position,
         public readonly int $id
     ){}
 
@@ -16,7 +16,7 @@ class PositionConfig extends Sortable
         return $this->id;
     }
 
-    public function position(): int
+    public function position(): int | null
     {
         return $this->position;
     }
