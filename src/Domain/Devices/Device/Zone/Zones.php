@@ -1,8 +1,8 @@
 <?php
 namespace App\Domain\Devices\Device\Zone;
 
-use App\Domain\Devices\SortableList;
 use App\Domain\Devices\Device\Zone\Zone;
+use App\Domain\Devices\Utils\SortableList;
 use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
 use App\Domain\Devices\Device\Irrigator\Irrigator;
