@@ -6,7 +6,7 @@ use App\Domain\Devices\Utils\Sortable;
 class PositionConfig extends Sortable
 {
     public function __construct(
-        public readonly int $position,
+        public int $position,
         public readonly int $id
     ){}
 
