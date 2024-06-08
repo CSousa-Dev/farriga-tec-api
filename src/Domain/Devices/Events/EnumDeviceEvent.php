@@ -1,9 +1,7 @@
 <?php 
 namespace App\Domain\Devices\Events;
 
-use Symfony\Component\Console\Output\NullOutput;
-
-enum EnumDeviceEvents 
+enum EnumDeviceEvent 
 {
     case DEVICE_TURN_ON;
     case DEVICE_TURN_OFF;

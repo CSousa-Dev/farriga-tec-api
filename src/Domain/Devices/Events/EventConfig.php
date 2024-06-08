@@ -1,9 +1,9 @@
 <?php
 namespace App\Domain\Devices\Events;
 
-use App\Domain\Devices\Events\EnumDeviceEvents;
-use App\Domain\Devices\Events\EnumIrrigatorEvent;
+use App\Domain\Devices\Events\EnumDeviceEvent;
 use App\Domain\Devices\Events\EnumSensorEvent;
+use App\Domain\Devices\Events\EnumIrrigatorEvent;
 
 class EventConfig 
 {
@@ -19,7 +19,7 @@ class EventConfig
 
     public function foundEvent(string $eventName)
     {
-        $event = EnumDeviceEvents::fromString($eventName);
+        $event = EnumDeviceEvent::fromString($eventName);
 
         if($event !== null) return;
 
