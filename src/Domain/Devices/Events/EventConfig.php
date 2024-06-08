@@ -11,8 +11,8 @@ class EventConfig
         public readonly string  $eventName,
         public readonly bool    $canListen,
         public readonly bool    $canEmit,
-        public readonly string  $listenKey,
-        public readonly string  $emitKey
+        public readonly ?string  $listenKey,
+        public readonly ?string  $emitKey
     ){
         $this->foundEvent($eventName);
     }
@@ -21,28 +21,17 @@ class EventConfig
     {
         $event = EnumDeviceEvents::fromString($eventName);
 
-        if($event !== null)
-        {
-            $this->eventName = $event;
-            return;
-        }
+        if($event !== null) return;
 
         $event = EnumSensorEvent::fromString($eventName);
 
-        if($event !== null)
-        {
-            $this->eventName = $event;
-            return;
-        }
+        if($event !== null) return;
 
         $event = EnumIrrigatorEvent::fromString($eventName);
 
-        if($event !== null)
-        {
-            $this->eventName = $event;
-            return;
-        }
+        if($event !== null) return;
+        
 
-        throw new \Exception("Invalid event type");
+        throw new \Exception("Invalid event type $eventName");
     }
 }

@@ -5,11 +5,12 @@ namespace App\Infra\Doctrine\Entity\Devices;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use App\Infra\Doctrine\Entity\Devices\Device;
-use App\Infra\Doctrine\Entity\Devices\EventType;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Infra\Doctrine\Entity\Devices\DeviceEvent;
 use App\Infra\Doctrine\Repository\Devices\DeviceTypeRepository;
 
 #[ORM\Entity(repositoryClass: DeviceTypeRepository::class)]
+#[ORM\Table(name: 'devices.device_type')]
 class DeviceType
 {
     #[ORM\Id]
@@ -39,15 +40,15 @@ class DeviceType
     private Collection $Devices;
 
     /**
-     * @var Collection<int, EventType>
+     * @var Collection<int, DeviceEvent>
      */
-    #[ORM\ManyToMany(targetEntity: EventType::class, mappedBy: 'deviceEvents')]
-    private Collection $eventConfig;
+    #[ORM\OneToMany(targetEntity: DeviceEvent::class, mappedBy: 'device', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $deviceEvents;
 
     public function __construct()
     {
         $this->Devices = new ArrayCollection();
-        $this->eventConfig = new ArrayCollection();
+        $this->deviceEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,25 +147,31 @@ class DeviceType
     }
 
     /**
-     * @return Collection<int, EventType>
+     * @return Collection<int, DeviceEvent>
      */
-    public function geteventConfig(): Collection
+    public function getDeviceEvents(): Collection
     {
-        return $this->eventConfig;
+        return $this->deviceEvents;
     }
 
-    public function addeventConfig(EventType $eventConfig): static
+    public function addDeviceEvent(DeviceEvent $deviceEvent): static
     {
-        if (!$this->eventConfig->contains($eventConfig)) {
-            $this->eventConfig->add($eventConfig);
+        if (!$this->deviceEvents->contains($deviceEvent)) {
+            $this->deviceEvents->add($deviceEvent);
+            $deviceEvent->setDevice($this);
         }
 
         return $this;
     }
 
-    public function removeeventConfig(EventType $eventConfig): static
+    public function removeDeviceEvent(DeviceEvent $deviceEvent): static
     {
-        $this->eventConfig->removeElement($eventConfig);
+        if ($this->deviceEvents->removeElement($deviceEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($deviceEvent->getDevice() === $this) {
+                $deviceEvent->setDevice(null);
+            }
+        }
 
         return $this;
     }

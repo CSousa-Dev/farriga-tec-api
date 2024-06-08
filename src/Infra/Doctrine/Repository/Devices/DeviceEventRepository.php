@@ -3,38 +3,38 @@
 namespace App\Infra\Doctrine\Repository\Devices;
 
 use Doctrine\Persistence\ManagerRegistry;
-use App\Infra\Doctrine\Entity\Devices\EventType;
+use App\Infra\Doctrine\Entity\Devices\DeviceEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
- * @extends ServiceEntityRepository<EventType>
+ * @extends ServiceEntityRepository<DeviceEvent>
  */
-class EventTypeRepository extends ServiceEntityRepository
+class DeviceEventRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, EventType::class);
+        parent::__construct($registry, DeviceEvent::class);
     }
 
 //    /**
-//     * @return EventType[] Returns an array of EventType objects
+//     * @return DeviceEvent[] Returns an array of DeviceEvent objects
 //     */
 //    public function findByExampleField($value): array
 //    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
+//        return $this->createQueryBuilder('d')
+//            ->andWhere('d.exampleField = :val')
 //            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
+//            ->orderBy('d.id', 'ASC')
 //            ->setMaxResults(10)
 //            ->getQuery()
 //            ->getResult()
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?EventType
+//    public function findOneBySomeField($value): ?DeviceEvent
 //    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
+//        return $this->createQueryBuilder('d')
+//            ->andWhere('d.exampleField = :val')
 //            ->setParameter('val', $value)
 //            ->getQuery()
 //            ->getOneOrNullResult()

@@ -2,17 +2,17 @@
 
 namespace App\DataFixtures;
 
+use App\Infra\Doctrine\Entity\Devices\DeviceEvent;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use App\Infra\Doctrine\Entity\Devices\EventType;
 use App\Infra\Doctrine\Entity\Devices\DeviceType;
-use App\Infra\Doctrine\Entity\Account\DocumentType;
+use App\Infra\Doctrine\Entity\Devices\EventConfig;
 
 class CreateDeviceEventConfig extends Fixture
 {
     public function load(ObjectManager $manager): void
     {        
-        $deviceTurnOnEvent = new EventType();
+        $deviceTurnOnEvent = new EventConfig();
         $deviceTurnOnEvent->setName('DEVICE_TURN_ON');
         $deviceTurnOnEvent->setCanEmit(true);
         $deviceTurnOnEvent->setCanListen(true);
@@ -21,7 +21,7 @@ class CreateDeviceEventConfig extends Fixture
 
         $manager->persist($deviceTurnOnEvent);
 
-        $deviceTurnOffEvent = new EventType();
+        $deviceTurnOffEvent = new EventConfig();
         $deviceTurnOffEvent->setName('DEVICE_TURN_OFF');
         $deviceTurnOffEvent->setCanEmit(true);
         $deviceTurnOffEvent->setCanListen(true);
@@ -30,7 +30,7 @@ class CreateDeviceEventConfig extends Fixture
 
         $manager->persist($deviceTurnOffEvent);
 
-        $deviceManualUsageEvent = new EventType();
+        $deviceManualUsageEvent = new EventConfig();
         $deviceManualUsageEvent->setName('DEVICE_MANUAL_USAGE');
         $deviceManualUsageEvent->setCanEmit(true);
         $deviceManualUsageEvent->setCanListen(true);
@@ -46,10 +46,25 @@ class CreateDeviceEventConfig extends Fixture
         $farrigaOneDeviceType->setUseWifiConnection(true);
         $farrigaOneDeviceType->setCanPowerControll(true);
         $farrigaOneDeviceType->setCanManualControll(true);
-        $farrigaOneDeviceType->addEventConfig($deviceTurnOnEvent);
-        $farrigaOneDeviceType->addEventConfig($deviceTurnOffEvent);
-        $farrigaOneDeviceType->addEventConfig($deviceManualUsageEvent);
 
+
+        $deviceOnEventRelation = new DeviceEvent();
+        $deviceOnEventRelation->setEvent($deviceTurnOnEvent);
+        $deviceOnEventRelation->setDevice($farrigaOneDeviceType);
+
+
+        $deviceOffEventRelation = new DeviceEvent();
+        $deviceOffEventRelation->setEvent($deviceTurnOffEvent);
+        $deviceOffEventRelation->setDevice($farrigaOneDeviceType);
+
+        $deviceManualUsageEventRelation = new DeviceEvent();
+        $deviceManualUsageEventRelation->setEvent($deviceManualUsageEvent);
+        $deviceManualUsageEventRelation->setDevice($farrigaOneDeviceType);
+
+        $farrigaOneDeviceType->addDeviceEvent($deviceOnEventRelation);
+        $farrigaOneDeviceType->addDeviceEvent($deviceOffEventRelation);
+        $farrigaOneDeviceType->addDeviceEvent($deviceManualUsageEventRelation);
+        
         $manager->persist($farrigaOneDeviceType);
         $manager->flush();
     }

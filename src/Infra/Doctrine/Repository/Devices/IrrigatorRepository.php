@@ -3,13 +3,13 @@
 namespace App\Infra\Doctrine\Repository\Devices;
 
 use Doctrine\Persistence\ManagerRegistry;
-use App\Domain\Devices\Events\EventConfig;
 use App\Infra\Doctrine\Entity\Devices\Zone;
-use App\Infra\Doctrine\Entity\Devices\EventType;
 use App\Infra\Doctrine\Entity\Devices\Irrigator;
+use App\Domain\Devices\Device\Irrigator\Irrigators;
 use App\Infra\Doctrine\Entity\Devices\IrrigatorType;
 use App\Domain\Devices\Repository\IIrrigatorRepository;
 use App\Domain\Devices\Device\Irrigator\IrrigatorActionsConfig;
+use App\Infra\Doctrine\Repository\Devices\EventConfigRepository;
 use App\Domain\Devices\Device\Irrigator\Irrigator as DomainIrrigator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -20,6 +20,7 @@ class IrrigatorRepository extends ServiceEntityRepository implements IIrrigatorR
 {
     public function __construct(
         private IrrigatorTypeRepository $irrigatorTypeRepository,
+        private EventConfigRepository $eventTypeRepository,
         ManagerRegistry $registry
     )
     {
@@ -69,18 +70,15 @@ class IrrigatorRepository extends ServiceEntityRepository implements IIrrigatorR
         $entityManager->flush();
     }
 
-    public function hydrateSensor(Irrigator $irrigator): DomainIrrigator
-    {
+    public function hydrateIrrigator(Irrigator $irrigator): DomainIrrigator
+    {       
+        $events = [];
 
-        $events = $irrigator->getIrrigatorType()->getEventConfig()->map(function(EventType $eventType){
-            return new EventConfig(
-                eventName: $eventType->getName(), 
-                canListen: $eventType->canListen(),
-                canEmit: $eventType->isCanEmit(),
-                listenKey: $eventType->getListenKey(),
-                emitKey: $eventType->getEmitKey()
-            );
-        });
+        foreach($irrigator->getIrrigatorType()->getIrrigatorEvents() as $relationIrrigatorEvent)
+        {
+            $events[] = $this->eventTypeRepository->hydrate($relationIrrigatorEvent->getEvent());
+        }
+
 
         $domainIrrigator = new DomainIrrigator(
             id: $irrigator->getId(),
@@ -95,10 +93,21 @@ class IrrigatorRepository extends ServiceEntityRepository implements IIrrigatorR
                 canTurOnTurnOff: $irrigator->getIrrigatorType()->canTurnOnTurnOff()
             )
         );
-        
-        $domainIrrigator->addCondifguredEvents(...$events->toArray());
 
+        $domainIrrigator->addCondifguredEvents(...$events);
         return $domainIrrigator;
+    }
+
+    public function hydrateIrrigators(Irrigator ...$entityIrrigators): Irrigators
+    {
+        $irrigators = new Irrigators();
+
+        foreach($entityIrrigators as $entityIrrigator)
+        {
+            $irrigators->addIrrigator($this->hydrateIrrigator($entityIrrigator));
+        }
+
+        return $irrigators;
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Infra\Doctrine\Entity\Devices;
 
+use App\Entity\DeviceEvent;
 use Doctrine\ORM\Mapping as ORM;
 use App\Infra\Doctrine\Entity\Account\User;
 use App\Infra\Doctrine\Entity\Devices\Zone;

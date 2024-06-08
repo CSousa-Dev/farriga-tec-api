@@ -5,6 +5,8 @@ namespace App\Infra\Doctrine\Entity\Devices;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Infra\Doctrine\Entity\Devices\EventConfig;
+use App\Infra\Doctrine\Entity\Devices\SensorEvent;
 use App\Infra\Doctrine\Repository\Devices\SensorTypeRepository;
 
 #[ORM\Entity(repositoryClass: SensorTypeRepository::class)]
@@ -35,14 +37,16 @@ class SensorType
     private ?string $unit = null;
 
     /**
-     * @var Collection<int, EventType>
+     * @var Collection<int, SensorEvent>
      */
-    #[ORM\ManyToMany(targetEntity: EventType::class, mappedBy: 'sensorEvents', cascade: ['persist'])]
-    private Collection $condifguredEvents;
+    #[ORM\OneToMany(targetEntity: SensorEvent::class, mappedBy: 'sensorType', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $sensorEvents;
+
+
 
     public function __construct()
     {
-        $this->condifguredEvents = new ArrayCollection();
+        $this->sensorEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,26 +127,33 @@ class SensorType
     }
 
     /**
-     * @return Collection<int, EventType>
+     * @return Collection<int, SensorEvent>
      */
-    public function getCondifguredEvents(): Collection
+    public function getSensorEvents(): Collection
     {
-        return $this->condifguredEvents;
+        return $this->sensorEvents;
     }
 
-    public function addCondifguredEvent(EventType $condifguredEvent): static
+    public function addSensorEvent(SensorEvent $sensorEvent): static
     {
-        if (!$this->condifguredEvents->contains($condifguredEvent)) {
-            $this->condifguredEvents->add($condifguredEvent);
+        if (!$this->sensorEvents->contains($sensorEvent)) {
+            $this->sensorEvents->add($sensorEvent);
+            $sensorEvent->setSensorType($this);
         }
 
         return $this;
     }
 
-    public function removeCondifguredEvent(EventType $condifguredEvent): static
+    public function removeSensorEvent(SensorEvent $sensorEvent): static
     {
-        $this->condifguredEvents->removeElement($condifguredEvent);
+        if ($this->sensorEvents->removeElement($sensorEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($sensorEvent->getSensorType() === $this) {
+                $sensorEvent->setSensorType(null);
+            }
+        }
 
         return $this;
     }
+
 }

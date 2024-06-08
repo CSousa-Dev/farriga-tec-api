@@ -9,6 +9,7 @@ use App\Domain\Devices\Repository\IDeviceRepository;
 use App\Domain\Devices\Device\Device as DomainDevice;
 use App\Infra\Doctrine\Repository\Account\UserRepository;
 use App\Domain\Account\Repository\IUserDevicesListRepository;
+use App\Domain\Devices\Device\DeviceList;
 use App\Infra\Doctrine\Repository\Devices\IrrigatorRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -23,6 +24,7 @@ class DeviceRepository extends ServiceEntityRepository implements IDeviceReposit
         private SensorRepository $sensorRepository,
         private IrrigatorRepository $irrigatorRepository,
         private UserRepository $userRepository,
+        private EventConfigRepository $eventTypeRepository,
         ManagerRegistry $registry)
     {
         parent::__construct($registry, Device::class);
@@ -129,14 +131,47 @@ class DeviceRepository extends ServiceEntityRepository implements IDeviceReposit
     public function hydrateDomainDevice(Device $device): DomainDevice
     {
         $this->getEntityManager()->refresh($device);
-        $zones = $this->zoneRepository->hydrateZones(...$device->getZones());
 
-        return new DomainDevice(
+        $events = [];
+
+        foreach($device->getDeviceType()->getDeviceEvents() as $relationDeviceEvent)
+        {
+            $events[] = $this->eventTypeRepository->hydrate($relationDeviceEvent->getEvent());
+        }
+        
+        $zones = $this->zoneRepository->hydrateZones(
+            $this->irrigatorRepository,
+            $this->sensorRepository,
+            ...$device->getZones());
+
+        $domainDevice = new DomainDevice(
             macAddress: $device->getMacAddress(), 
             id: $device->getId(),
             model: $this->deviceTypeRepository->hydatreDeviceDomainModel($device->getDeviceType()),
             power: $device->isPower(),
             zones: $zones
         );
+
+        $domainDevice->addCondifguredEvents(...$events);
+
+        return $domainDevice;
+    }
+
+    public function findAllDevicesByUserEmail(string $userEmail): DeviceList
+    {
+        $owner = $this->userRepository->getUserByEmailAddress($userEmail);
+        $devices = $this->findByOwner($owner);
+        
+
+        if(empty($devices)) return new DeviceList();
+
+        $deviceList = new DeviceList();
+
+        foreach($devices as $device)
+        {
+            $deviceList->addDevice($this->hydrateDomainDevice($device));
+        }
+    
+        return $deviceList;
     }
 }

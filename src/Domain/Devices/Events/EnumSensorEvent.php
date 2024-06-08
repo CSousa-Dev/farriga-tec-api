@@ -18,7 +18,7 @@ enum EnumSensorEvent
         };
     }
 
-    public static function fromString(string $type): self
+    public static function fromString(string $type): self | null
     {
         return match ($type) {
             'SENSOR_ON' => self::SENSOR_ON,

@@ -5,10 +5,16 @@ use App\Domain\Devices\Sortable;
 use App\Domain\Devices\Device\Zone\Zones;
 use App\Domain\Devices\Device\Sensor\Sensor;
 use App\Domain\Devices\Utils\PositionConfig;
+use App\Domain\Devices\Events\DeviceEventsConfig;
 use App\Domain\Devices\Device\Irrigator\Irrigator;
+use App\Domain\Devices\Events\EventConfig;
 
 class Device extends Sortable
 {
+    /**
+     * @var DeviceEventsConfig[]
+     */
+    private array $deviceEventsConfig;
     public function __construct(
         public  readonly string     $macAddress,
         public  readonly DeviceType $model,
@@ -108,5 +114,15 @@ class Device extends Sortable
             $irrigator,
             $zonePosition
         );
+    }
+
+    public function addCondifguredEvents(EventConfig ...$deviceEventsConfig): void
+    {
+        $this->deviceEventsConfig = $deviceEventsConfig;
+    }
+
+    public function configuredEvents(): array
+    {
+        return $this->deviceEventsConfig;
     }
 }

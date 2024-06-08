@@ -1,7 +1,8 @@
 <?php 
 namespace App\DataFixtures;
 
-use App\Infra\Doctrine\Entity\Devices\EventType;
+use App\Infra\Doctrine\Entity\Devices\EventConfig;
+use App\Infra\Doctrine\Entity\Devices\IrrigatorEvent;
 use App\Infra\Doctrine\Entity\Devices\IrrigatorType;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -10,7 +11,7 @@ class CreateIrrigatorTypes extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $irrigatioOnEvent = new EventType();
+        $irrigatioOnEvent = new EventConfig();
         $irrigatioOnEvent->setName('IRRIGATION_ON');
         $irrigatioOnEvent->setCanEmit(true);
         $irrigatioOnEvent->setCanListen(true);
@@ -18,7 +19,7 @@ class CreateIrrigatorTypes extends Fixture
         $irrigatioOnEvent->setEmitKey('API/{macAddress}/{zone}/{target}/{number}/IRRIGATION');
         $manager->persist($irrigatioOnEvent);
 
-        $irrigatioOffEvent = new EventType();
+        $irrigatioOffEvent = new EventConfig();
         $irrigatioOffEvent->setName('IRRIGATION_OFF');
         $irrigatioOffEvent->setCanEmit(true);
         $irrigatioOffEvent->setCanListen(true);
@@ -26,7 +27,7 @@ class CreateIrrigatorTypes extends Fixture
         $irrigatioOffEvent->setEmitKey('API/{macAddress}/{zone}/{target}/{number}/IRRIGATION');
         $manager->persist($irrigatioOffEvent);
         
-        $irrigatioStartEvent = new EventType();
+        $irrigatioStartEvent = new EventConfig();
         $irrigatioStartEvent->setName('IRRIGATION_START');
         $irrigatioStartEvent->setCanEmit(true);
         $irrigatioStartEvent->setCanListen(true);
@@ -34,7 +35,7 @@ class CreateIrrigatorTypes extends Fixture
         $irrigatioStartEvent->setEmitKey('API/{macAddress}/{zone}/{target}/{number}/IRRIGATE');
         $manager->persist($irrigatioStartEvent);
         
-        $irrigatioStopEvent = new EventType();
+        $irrigatioStopEvent = new EventConfig();
         $irrigatioStopEvent->setName('IRRIGATION_STOP');
         $irrigatioStopEvent->setCanEmit(true);
         $irrigatioStopEvent->setCanListen(true);
@@ -42,7 +43,7 @@ class CreateIrrigatorTypes extends Fixture
         $irrigatioStopEvent->setEmitKey('API/{macAddress}/{zone}/{target}/{number}/IRRIGATE');
         $manager->persist($irrigatioStartEvent);
 
-        $irrigationChangeWateringTimeEvent = new EventType();
+        $irrigationChangeWateringTimeEvent = new EventConfig();
         $irrigationChangeWateringTimeEvent->setName('IRRIGATION_CHANGE_WATERING_TIME');
         $irrigationChangeWateringTimeEvent->setCanEmit(true);
         $irrigationChangeWateringTimeEvent->setCanListen(true);
@@ -50,7 +51,7 @@ class CreateIrrigatorTypes extends Fixture
         $irrigationChangeWateringTimeEvent->setEmitKey('API/{macAddress}/{zone}/{target}/{number}/WATERING_TIME');
         $manager->persist($irrigationChangeWateringTimeEvent);
 
-        $irrigationChangeCheckIntervalEvent = new EventType();
+        $irrigationChangeCheckIntervalEvent = new EventConfig();
         $irrigationChangeCheckIntervalEvent->setName('IRRIGATION_CHANGE_CHECK_INTERVAL');
         $irrigationChangeCheckIntervalEvent->setCanEmit(true);
         $irrigationChangeCheckIntervalEvent->setCanListen(true);
@@ -66,14 +67,39 @@ class CreateIrrigatorTypes extends Fixture
         $irrigator->setCanTurnOnTurnOff(true);
         $irrigator->setLabel('Irrigador');
         $irrigator->setModel('Irrigador 1.0');
-        $irrigator->addEventConfig($irrigatioOnEvent);
-        $irrigator->addEventConfig($irrigatioOffEvent);
-        $irrigator->addEventConfig($irrigatioStartEvent);
-        $irrigator->addEventConfig($irrigatioStopEvent);
-        $irrigator->addEventConfig($irrigationChangeWateringTimeEvent);
-        $irrigator->addEventConfig($irrigationChangeCheckIntervalEvent);
-        $manager->persist($irrigator);
 
+        $irrigatorOnEventRelation = new IrrigatorEvent();
+        $irrigatorOnEventRelation->setIrrigator($irrigator);
+        $irrigatorOnEventRelation->setEvent($irrigatioOnEvent);
+
+        $irrigatorOffEventRelation = new IrrigatorEvent();
+        $irrigatorOffEventRelation->setIrrigator($irrigator);
+        $irrigatorOffEventRelation->setEvent($irrigatioOffEvent);
+
+        $irrigatorStartEventRelation = new IrrigatorEvent();
+        $irrigatorStartEventRelation->setIrrigator($irrigator);
+        $irrigatorStartEventRelation->setEvent($irrigatioStartEvent);
+
+        $irrigatorStopEventRelation = new IrrigatorEvent();
+        $irrigatorStopEventRelation->setIrrigator($irrigator);
+        $irrigatorStopEventRelation->setEvent($irrigatioStopEvent);
+
+        $irrigatorChangeWateringTimeEventRelation = new IrrigatorEvent();
+        $irrigatorChangeWateringTimeEventRelation->setIrrigator($irrigator);
+        $irrigatorChangeWateringTimeEventRelation->setEvent($irrigationChangeWateringTimeEvent);
+
+        $irrigatorChangeCheckIntervalEventRelation = new IrrigatorEvent();
+        $irrigatorChangeCheckIntervalEventRelation->setIrrigator($irrigator);
+        $irrigatorChangeCheckIntervalEventRelation->setEvent($irrigationChangeCheckIntervalEvent);
+
+        $irrigator->addIrrigatorEvent($irrigatorOnEventRelation);
+        $irrigator->addIrrigatorEvent($irrigatorOffEventRelation);
+        $irrigator->addIrrigatorEvent($irrigatorStartEventRelation);
+        $irrigator->addIrrigatorEvent($irrigatorStopEventRelation);
+        $irrigator->addIrrigatorEvent($irrigatorChangeWateringTimeEventRelation);
+        $irrigator->addIrrigatorEvent($irrigatorChangeCheckIntervalEventRelation);
+
+        $manager->persist($irrigator);
         $manager->flush();
     }
 }

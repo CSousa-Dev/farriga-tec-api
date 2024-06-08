@@ -4,11 +4,8 @@ namespace App\Infra\Doctrine\Repository\Devices;
 
 use App\Domain\Devices\Sensor\SensorActionsConfig;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Domain\Devices\Events\EventConfig;
 use App\Infra\Doctrine\Entity\Devices\Zone;
-use Symfony\Contracts\EventDispatcher\Event;
 use App\Infra\Doctrine\Entity\Devices\Sensor;
-use App\Infra\Doctrine\Entity\Devices\EventType;
 use App\Infra\Doctrine\Entity\Devices\SensorType;
 use App\Domain\Devices\Repository\ISensorRepository;
 use App\Domain\Devices\Device\Sensor\Sensor as DomainSensor;
@@ -21,7 +18,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 class SensorRepository extends ServiceEntityRepository implements ISensorRepository
 {
     public function __construct(
-        private SensorTypeRepository $sensorTypeRepository,    
+        private SensorTypeRepository $sensorTypeRepository,   
+        private EventConfigRepository $eventTypeRepository, 
         ManagerRegistry $registry
     )
     {
@@ -72,16 +70,13 @@ class SensorRepository extends ServiceEntityRepository implements ISensorReposit
 
     public function hydrateSensor(Sensor $sensor): DomainSensor
     {
+        $events = [];
 
-        $events = $sensor->getSensorType()->getCondifguredEvents()->map(function(EventType $eventType){
-            return new EventConfig(
-                eventName: $eventType->getName(), 
-                canListen: $eventType->canListen(),
-                canEmit: $eventType->isCanEmit(),
-                listenKey: $eventType->getListenKey(),
-                emitKey: $eventType->getEmitKey()
-            );
-        });
+        foreach($sensor->getSensorType()->getSensorEvents() as $relationSensorEvent)
+        {
+            $events[] = $this->eventTypeRepository->hydrate($relationSensorEvent->getEvent());
+        }
+
 
         $domainSensor = new DomainSensor(
             id: $sensor->getId(),
@@ -95,9 +90,9 @@ class SensorRepository extends ServiceEntityRepository implements ISensorReposit
                 TresholdType::EXACT
             )
         );
-        
-        $domainSensor->addCondifguredEvents(...$events->toArray());
 
+        $domainSensor->addCondifguredEvents(...$events);
+        
         return $domainSensor;
     }
 

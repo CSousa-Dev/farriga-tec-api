@@ -3,6 +3,7 @@
 namespace App\Infra\Doctrine\Repository\Devices;
 
 use App\Domain\Devices\Device\Device;
+use App\Domain\Devices\Device\Irrigator\Irrigators;
 use App\Domain\Devices\Device\Zone\Zones;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Infra\Doctrine\Entity\Devices\Zone;
@@ -31,9 +32,13 @@ class ZoneRepository extends ServiceEntityRepository
         $entityManager->flush();
     }
 
-    public function hydrateZones(Zone ...$entityZones): Zones
+    public function hydrateZones(
+        IrrigatorRepository $irrigatorRepository,
+        SensorRepository $sensorRepository,
+        Zone ...$entityZones): Zones
     {
         $zones = new Zones();
+
         foreach($entityZones as $entityZone)
         {
             $zone = new DomainZone(
@@ -41,6 +46,23 @@ class ZoneRepository extends ServiceEntityRepository
                 position: $entityZone->getPosition(),
                 alias: $entityZone->getAlias(),
             );
+
+            $entityIrrigators = $entityZone->getIrrigators();
+
+            foreach($entityIrrigators as $entityIrrigator)
+            {
+                $irrigator = $irrigatorRepository->hydrateIrrigator($entityIrrigator);
+                $zone->addIrrigator($irrigator);
+            }
+
+            $entitySensors = $entityZone->getSensors();
+
+            foreach($entitySensors as $entitySensor)
+            {
+                $sensor = $sensorRepository->hydrateSensor($entitySensor);
+                $zone->addSensor($sensor);
+            }
+         
             $zones->addZone($zone);
         }
         return $zones;

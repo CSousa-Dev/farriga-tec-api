@@ -5,6 +5,8 @@ namespace App\Infra\Doctrine\Entity\Devices;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Infra\Doctrine\Entity\Devices\EventConfig;
+use App\Infra\Doctrine\Entity\Devices\IrrigatorEvent;
 use App\Infra\Doctrine\Repository\Devices\IrrigatorTypeRepository;
 
 #[ORM\Entity(repositoryClass: IrrigatorTypeRepository::class)]
@@ -44,15 +46,15 @@ class IrrigatorType
     private Collection $irrigators;
 
     /**
-     * @var Collection<int, EventType>
+     * @var Collection<int, IrrigatorEvent>
      */
-    #[ORM\ManyToMany(targetEntity: EventType::class, mappedBy: 'irrigatorEvents', cascade: ['persist'])]
-    private Collection $eventConfig;
+    #[ORM\OneToMany(targetEntity: IrrigatorEvent::class, mappedBy: 'irrigator', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $irrigatorEvents;
 
     public function __construct()
     {
         $this->irrigators = new ArrayCollection();
-        $this->eventConfig = new ArrayCollection();
+        $this->irrigatorEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,27 +164,36 @@ class IrrigatorType
         return $this;
     }
 
+
     /**
-     * @return Collection<int, EventType>
+     * @return Collection<int, IrrigatorEvent>
      */
-    public function getEventConfig(): Collection
+    public function getIrrigatorEvents(): Collection
     {
-        return $this->eventConfig;
+        return $this->irrigatorEvents;
     }
 
-    public function addEventConfig(EventType $eventConfig): static
+    public function addIrrigatorEvent(IrrigatorEvent $irrigatorEvent): static
     {
-        if (!$this->eventConfig->contains($eventConfig)) {
-            $this->eventConfig->add($eventConfig);
+        if (!$this->irrigatorEvents->contains($irrigatorEvent)) {
+            $this->irrigatorEvents->add($irrigatorEvent);
+            $irrigatorEvent->setIrrigator($this);
         }
 
         return $this;
     }
 
-    public function removeEventConfig(EventType $eventConfig): static
+    public function removeIrrigatorEvent(IrrigatorEvent $irrigatorEvent): static
     {
-        $this->eventConfig->removeElement($eventConfig);
+        if ($this->irrigatorEvents->removeElement($irrigatorEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($irrigatorEvent->getIrrigator() === $this) {
+                $irrigatorEvent->setIrrigator(null);
+            }
+        }
 
         return $this;
     }
+
+
 }
