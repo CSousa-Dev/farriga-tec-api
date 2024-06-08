@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repository;
+namespace App\Infra\Doctrine\Repository\Devices;
 
-use App\Entity\Share;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Infra\Doctrine\Entity\Devices\Share;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Share>

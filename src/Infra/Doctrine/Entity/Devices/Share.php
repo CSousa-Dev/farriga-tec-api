@@ -2,11 +2,11 @@
 
 namespace App\Infra\Doctrine\Entity\Devices;
 
-use App\Infra\Doctrine\Entity\Account\User;
-use App\Repository\ShareRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Infra\Doctrine\Entity\Account\User;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Infra\Doctrine\Repository\Devices\ShareRepository;
 
 #[ORM\Entity(repositoryClass: ShareRepository::class)]
 #[ORM\Table(name: 'devices.share')]
