@@ -27,7 +27,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
          */
         $accessToken = $this->repository->findOneByToken($accessToken);
         
-        if (null === $accessToken || !$accessToken->isValid()) {
+        if (null === $accessToken) {
             throw new BadCredentialsException('Invalid credentials.');
         }
 

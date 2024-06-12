@@ -47,6 +47,14 @@ class UserSecurityInfoRepository extends ServiceEntityRepository implements Pass
         return $userSecurityInfo;
     }
 
+    public function revokeAllTokens(UserSecurityInfo $userSecurityInfo): void
+    {
+        $userSecurityInfo->revokeAllTokens();
+
+        $this->getEntityManager()->persist($userSecurityInfo);
+        $this->getEntityManager()->flush();
+    }
+
 //    /**
 //     * @return UserSecurityInfo[] Returns an array of UserSecurityInfo objects
 //     */

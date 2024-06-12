@@ -14,10 +14,14 @@ class ApiToken
 
     //TODO pensar e definir escopos
 
-    public function __construct(string $type = self::PERSONAL_ACCESS_TOKEN_PREFIX)
+    public function __construct(string $appKey, string $type = self::PERSONAL_ACCESS_TOKEN_PREFIX)
     {
         $this->token = $type . bin2hex(random_bytes(32));
+        $this->refreshToken = $type . bin2hex(random_bytes(32));
         $this->expiresAt = new \DateTimeImmutable('+1 hour');
+
+        $this->appKey = $appKey;
+        $this->refreshTokenExpiresAt = new \DateTimeImmutable('+1 week');
     }
 
     #[ORM\Id]
@@ -34,6 +38,18 @@ class ApiToken
 
     #[ORM\Column(length: 68)]
     private string $token;
+
+    #[ORM\Column(length: 68)]
+    private string $refreshToken;
+
+    #[ORM\Column]
+    private bool $refreshTokenRevoked = false;
+    
+    #[ORM\Column]
+    private string $appKey; 
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $refreshTokenExpiresAt = null;
 
     #[ORM\Column]
     private array $scope = [];
@@ -60,6 +76,11 @@ class ApiToken
         return $this->expiresAt >= new \DateTimeImmutable();
     }
 
+    public function isRefreshTokenRevoked(): bool
+    {
+        return $this->refreshTokenRevoked;
+    }
+
     public function getExpiresAt(): ?\DateTimeImmutable
     {
         return $this->expiresAt;
@@ -84,6 +105,18 @@ class ApiToken
         return $this;
     }
 
+    public function getAppKey(): ?string
+    {
+        return $this->appKey;
+    }
+
+    public function setAppKey(string $appKey): static
+    {
+        $this->appKey = $appKey;
+
+        return $this;
+    }
+
     public function getScope(): array
     {
         return $this->scope;
@@ -92,6 +125,37 @@ class ApiToken
     public function setScope(array $scope): static
     {
         $this->scope = $scope;
+
+        return $this;
+    }
+
+    public function getRefreshToken(): ?string
+    {
+        return $this->refreshToken;
+    }
+
+    public function setRefreshToken(string $refreshToken): static
+    {
+        $this->refreshToken = $refreshToken;
+
+        return $this;
+    }
+
+    public function getRefreshTokenExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->refreshTokenExpiresAt;
+    }
+
+    public function setRefreshTokenExpiresAt(?\DateTimeImmutable $refreshTokenExpiresAt): static
+    {
+        $this->refreshTokenExpiresAt = $refreshTokenExpiresAt;
+
+        return $this;
+    }
+
+    public function revokeRefreshToken(): static
+    {
+        $this->refreshTokenRevoked = true;
 
         return $this;
     }

@@ -146,7 +146,12 @@ class UserSecurityInfo implements UserInterface, PasswordAuthenticatedUserInterf
         return $this;
     }
 
-
+    public function revokeAllTokens(): void
+    {
+        foreach ($this->apiToken as $token) {
+            $token->revokeRefreshToken();
+        }
+    }
 
     public function getDomainUser(): User
     {
