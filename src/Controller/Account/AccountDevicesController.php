@@ -23,7 +23,16 @@ class AccountDevicesController extends AbstractController
         LinkDeviceService $linkDeviceService
     ): JsonResponse
     {   
+
         $currentUser = $this->getUser();
+
+        if($currentUser === null)
+        {
+            return $this->json([
+                'message' => 'User not found.'
+            ], 404);
+        }
+
         $email = $currentUser->getUserIdentifier();
 
         $json = $request->getContent();
