@@ -146,6 +146,7 @@ class AccountDevicesController extends AbstractController
                         'alias' => $sensor->alias(),
                         'name' => $sensor->name,
                         'model' => $sensor->model,
+                        'unit' => $sensor->unit,
                         'actions' => [
                             'canChangeTreshold' => $sensor->actionsConfig->canChangeTreshold,
                             'canChangeStartStop' => $sensor->actionsConfig->canControllStartStop,

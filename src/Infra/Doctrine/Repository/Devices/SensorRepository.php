@@ -84,6 +84,7 @@ class SensorRepository extends ServiceEntityRepository implements ISensorReposit
             model: $sensor->getSensorType()->getModel(),
             name: $sensor->getSensorType()->getLabel(),
             alias: $sensor->getAlias(),
+            unit: $sensor->getSensorType()->getUnit(),
             actionsConfig: new SensorActionsConfig(
                 $sensor->getSensorType()->isCanControllStartStop(),
                 $sensor->getSensorType()->isCanChangeTreshold(),
