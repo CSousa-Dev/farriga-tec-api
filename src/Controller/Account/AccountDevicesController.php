@@ -144,6 +144,7 @@ class AccountDevicesController extends AbstractController
                     $arraySensors[] = [
                         'position' => $sensor->position(),
                         'alias' => $sensor->alias(),
+                        'name' => $sensor->name,
                         'model' => $sensor->model,
                         'actions' => [
                             'canChangeTreshold' => $sensor->actionsConfig->canChangeTreshold,
